@@ -24,11 +24,8 @@ identityBuilder.AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbC
 
 services.AddRazorPages();
 services.AddServerSideBlazor();
-<<<<<<< Updated upstream
 services.AddMudServices();
-=======
 services.AddAutoMapper(typeof(MappingProfiles));
->>>>>>> Stashed changes
 
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 services.AddScoped<ExamplesService>();

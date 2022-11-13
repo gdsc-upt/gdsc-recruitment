@@ -58,8 +58,6 @@ public class FieldsController
 
     public async Task<FieldResponseView> Update(string id, FieldRequestView fieldRequestView)
     {
-        var newField = await _repository.UpdateAsync(id, _mapper.Map<FieldModel>(fieldRequestView));
-        newField.Updated = DateTime.UtcNow;
-        return _mapper.Map<FieldResponseView>(newField);
+        return _mapper.Map<FieldResponseView>(await _repository.UpdateAsync(id, _mapper.Map<FieldModel>(fieldRequestView)));
     }
 }
