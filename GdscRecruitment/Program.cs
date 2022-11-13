@@ -3,6 +3,7 @@ using GdscRecruitment.Auth;
 using GdscRecruitment.Data;
 using GdscRecruitment.Features.Example;
 using GdscRecruitment.Utilities;
+using GdscRecruitment.Utilities.Mappers;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +24,11 @@ identityBuilder.AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbC
 
 services.AddRazorPages();
 services.AddServerSideBlazor();
+<<<<<<< Updated upstream
 services.AddMudServices();
+=======
+services.AddAutoMapper(typeof(MappingProfiles));
+>>>>>>> Stashed changes
 
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 services.AddScoped<ExamplesService>();

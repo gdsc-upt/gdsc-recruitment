@@ -3,6 +3,7 @@ using System;
 using GdscRecruitment.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GdscRecruitment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221113204541_Fields and Responses")]
+    partial class FieldsandResponses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -128,7 +130,7 @@ namespace GdscRecruitment.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<bool>("IsRequired")
+                    b.Property<bool>("IsRequiered")
                         .HasColumnType("boolean");
 
                     b.Property<string>("Name")
@@ -136,6 +138,7 @@ namespace GdscRecruitment.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Placeholder")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("Updated")
