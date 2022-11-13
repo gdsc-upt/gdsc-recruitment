@@ -6,13 +6,9 @@
 
 @functions {
 
-    public async Task<IActionResult> OnPost()
+    public async Task<IActionResult> OnGet()
     {
-        if (SignInManager.IsSignedIn(User))
-        {
-            await SignInManager.SignOutAsync();
-        }
-
+        await SignInManager.SignOutAsync();
         return Redirect("~/");
     }
 

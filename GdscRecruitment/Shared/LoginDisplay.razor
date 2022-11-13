@@ -1,12 +1,22 @@
-﻿<AuthorizeView>
+﻿@using System.Security.Claims
+@using GdscRecruitment.Utilities
+<AuthorizeView>
     <Authorized>
-        <a href="Identity/Account/Manage">Hello, @context.User.Identity?.Name!</a>
-        <form method="post" action="Identity/Account/LogOut">
-            <button type="submit" class="nav-link btn btn-link">Log out</button>
-        </form>
+        <a href="Identity/Account/LogOut">Log out</a>
+
+        <a href="Identity/Account/Manage/Index">Hello, @context.User.Identity?.Name!</a>
+        @{
+            var avatar = context.User.FindFirstValue(CustomClaimTypes.Picture);
+            if (!string.IsNullOrEmpty(avatar))
+            {
+                <div class="picture-wrapper">
+                    <img class="picture" src="@avatar" alt="" referrerpolicy="no-referrer"/>
+                </div>
+            }
+        }
     </Authorized>
+
     <NotAuthorized>
-        <a href="Identity/Account/Register">Register</a>
-        <a href="Identity/Account/Login">Log in</a>
+        <a href="Identity/Account/ExternalLogin?returnUrl=%2Fcounter">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
