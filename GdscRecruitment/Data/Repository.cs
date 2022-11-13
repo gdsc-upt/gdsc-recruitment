@@ -38,7 +38,7 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         return await DbSet.FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<T> UpdateAsync([NotNull] string id, [NotNull] T newEntity)
+    public async Task<T> UpdateAsync([NotNull] string id, [NotNull] object newEntity)
     {
         var entity = await GetAsync(id);
         if (entity is null)

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GdscRecruitment.Features.Forms;
 
-public class FieldsController 
+public class FieldsService 
 {
     private readonly IRepository<FieldModel> _repository;
 
     private readonly IMapper _mapper;
 
-    public FieldsController(IRepository<FieldModel> repository, IMapper mapper)
+    public FieldsService(IRepository<FieldModel> repository, IMapper mapper)
     {
         _repository = repository;
         _mapper = mapper;
@@ -58,6 +58,6 @@ public class FieldsController
 
     public async Task<FieldResponseView> Update(string id, FieldRequestView fieldRequestView)
     {
-        return _mapper.Map<FieldResponseView>(await _repository.UpdateAsync(id, _mapper.Map<FieldModel>(fieldRequestView)));
+        return _mapper.Map<FieldResponseView>(await _repository.UpdateAsync(id, fieldRequestView));
     }
 }
