@@ -1,11 +1,13 @@
 using GdscRecruitment.Areas.Identity;
 using GdscRecruitment.Auth;
 using GdscRecruitment.Data;
+using GdscRecruitment.Features.Example;
 using GdscRecruitment.Utilities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +23,10 @@ identityBuilder.AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbC
 
 services.AddRazorPages();
 services.AddServerSideBlazor();
+services.AddMudServices();
 
+services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+services.AddScoped<ExamplesService>();
 services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 
 services.AddAuthentication().AddGoogle(options =>

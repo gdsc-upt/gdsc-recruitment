@@ -1,0 +1,43 @@
+﻿@page "/examples"
+@inject ExamplesService ExamplesService
+
+<PageTitle>Examples</PageTitle>
+
+<MudTable Items="@_elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+    <HeaderContent>
+        <MudTh>Nr</MudTh>
+        <MudTh>Sign</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh>Position</MudTh>
+        <MudTh>Molar mass</MudTh>
+        <MudTh>Molar mass2</MudTh>
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd DataLabel="Nr">@context.Id</MudTd>
+        <MudTd DataLabel="Sign">@context.Title</MudTd>
+        <MudTd DataLabel="Name">@context.Type</MudTd>
+        <MudTd DataLabel="Position" HideSmall="_hidePosition">@context.Number</MudTd>
+        <MudTd DataLabel="Molar mass">@context.Created</MudTd>
+        <MudTd DataLabel="Molar mass">@context.Updated</MudTd>
+    </RowTemplate>
+</MudTable>
+
+<MudSwitch @bind-Checked="_hidePosition">Hide <b>position</b> when Breakpoint=Xs</MudSwitch>
+<MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
+
+<MudPaper Class="pa-4 mt-4">
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add">Add</MudButton>
+</MudPaper>
+
+@code {
+    private bool _hidePosition;
+    private bool _loading;
+    private IEnumerable<ExampleModel> _elements = new List<ExampleModel>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _elements = await ExamplesService.Get();
+    }
+
+}

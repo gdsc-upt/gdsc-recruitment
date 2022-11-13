@@ -33,7 +33,7 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         return await DbSet.ToListAsync();
     }
 
-    public async Task<T> GetAsync([NotNull] string id)
+    public async Task<T?> GetAsync([NotNull] string id)
     {
         return await DbSet.FirstOrDefaultAsync(e => e.Id == id);
     }
@@ -53,7 +53,7 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         return DbSet.First(e => e.Id == id);
     }
 
-    public async Task<T>? DeleteAsync([NotNull] string id)
+    public async Task<T> DeleteAsync([NotNull] string id)
     {
         var entity = await DbSet.FirstOrDefaultAsync(item => item.Id == id);
 

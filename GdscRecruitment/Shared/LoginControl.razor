@@ -1,10 +1,12 @@
 @using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
-@inject HttpClient Http
-@if (User?.Identity?.Name != null)
+
+@if (_user?.Identity?.Name is not null)
 {
-    <img src="@Avatar"/>
-    <b>You are logged in as: @GivenName @Surname</b>
+    <img src="@_avatar" alt="@_givenName"/>
+
+    <b>You are logged in as: @_givenName @_surname</b>
+
     <a class="ml-md-auto btn btn-primary"
        href="/Identity/Logout"
        target="_top">
@@ -21,44 +23,26 @@ else
 }
 
 @code {
-    private ClaimsPrincipal? User;
-    private string? GivenName;
-    private string Surname;
-    private string Avatar;
+    private ClaimsPrincipal? _user;
+    private string? _givenName;
+    private string? _surname;
+    private string? _avatar;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        try
-        {
-    // Set the user to determine if they are logged in
-            User = HttpContextAccessor.HttpContext?.User;
-    // Try to get the GivenName
-            var givenName =
-                HttpContextAccessor.HttpContext.User
-                    .FindFirst(ClaimTypes.GivenName);
-            GivenName = givenName != null ? givenName.Value : User.Identity?.Name;
-    // Try to get the Surname
-            var surname =
-                HttpContextAccessor.HttpContext.User
-                    .FindFirst(ClaimTypes.Surname);
-            if (surname != null)
-            {
-                Surname = surname.Value;
-            }
-            else
-            {
-                Surname = "";
-            }
-    // Try to get Avatar
-            var avatar =
-                HttpContextAccessor.HttpContext.User
-                    .FindFirst("urn:google:image");
-            Avatar = avatar != null ? avatar.Value : "";
-        }
-        catch
-        {
-        }
+
+        _user = HttpContextAccessor.HttpContext?.User;
+        if (_user is null) return;
+
+        var givenName = _user.FindFirst(ClaimTypes.GivenName);
+        _givenName = givenName?.Value ?? _user.Identity?.Name;
+
+        var surname = _user.FindFirst(ClaimTypes.Surname);
+        _surname = surname?.Value ?? "";
+
+        var avatar = _user.FindFirst("urn:google:image");
+        _avatar = avatar?.Value ?? "";
     }
 
 }

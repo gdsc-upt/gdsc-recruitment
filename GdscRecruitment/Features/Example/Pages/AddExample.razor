@@ -1,0 +1,53 @@
+@page "/examples/add"
+@using GdscBackend.Models.Enums
+<h3>AddExample</h3>
+
+<MudGrid>
+    <MudItem xs="12" sm="7">
+        <MudPaper Class="pa-4">
+            <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors">
+                <MudTextField T="string" Label="Title" Required="true" RequiredError="User name is required!"/>
+
+                <MudTextField T="int" Label="Number" Required="true" RequiredError="Email is required!"/>
+
+                <div class="d-flex">
+                    <MudRadioGroup T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
+                        <MudRadio Option="@(ExampleTypeEnum.EasyExample)">Easy</MudRadio>
+                        <MudRadio Option="@(ExampleTypeEnum.NotEasyExample)">Not Easy</MudRadio>
+                        <MudRadio Option="@(ExampleTypeEnum.WtfExample)">WTF</MudRadio>
+                    </MudRadioGroup>
+                </div>
+            </MudForm>
+        </MudPaper>
+
+        <MudPaper Class="pa-4 mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(Save)">Add</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validate</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Reset())" Class="mx-2">Reset</MudButton>
+            <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="@(() => _form.ResetValidation())">Reset Validation</MudButton>
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="12" sm="5">
+        <MudPaper Class="pa-4 mud-height-full">
+            <MudText Typo="Typo.subtitle2">@($"Errors ({_errors.Length})")</MudText>
+            @foreach (var error in _errors)
+            {
+                <MudText Color="@Color.Error">@error</MudText>
+            }
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+@code {
+    bool _success;
+    string[] _errors = { };
+    MudForm _form = null!;
+
+    private void Save()
+    {
+        Console.WriteLine(_form.Model);
+    }
+
+}

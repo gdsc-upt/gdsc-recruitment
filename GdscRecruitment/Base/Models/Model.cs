@@ -1,6 +1,6 @@
 namespace GdscRecruitment.Base.Models;
 
-public class Model : IModel
+public abstract class Model : IModel
 {
     public string Id { get; set; }
 
