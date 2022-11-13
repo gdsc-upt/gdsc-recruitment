@@ -1,53 +1,58 @@
 @page "/examples/add"
-@using GdscBackend.Models.Enums
-<h3>AddExample</h3>
+@inject ExamplesService ExamplesService
 
-<MudGrid>
-    <MudItem xs="12" sm="7">
-        <MudPaper Class="pa-4">
-            <MudForm @ref="_form" @bind-IsValid="@_success" @bind-Errors="@_errors">
-                <MudTextField T="string" Label="Title" Required="true" RequiredError="User name is required!"/>
+<PageTitle>Add Example</PageTitle>
 
-                <MudTextField T="int" Label="Number" Required="true" RequiredError="Email is required!"/>
-
-                <div class="d-flex">
-                    <MudRadioGroup T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
-                        <MudRadio Option="@(ExampleTypeEnum.EasyExample)">Easy</MudRadio>
-                        <MudRadio Option="@(ExampleTypeEnum.NotEasyExample)">Not Easy</MudRadio>
-                        <MudRadio Option="@(ExampleTypeEnum.WtfExample)">WTF</MudRadio>
-                    </MudRadioGroup>
-                </div>
-            </MudForm>
-        </MudPaper>
-
-        <MudPaper Class="pa-4 mt-4">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(Save)">Add</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" OnClick="@(() => _form.Validate())">Validate</MudButton>
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DisableElevation="true" OnClick="@(() => _form.Reset())" Class="mx-2">Reset</MudButton>
-            <MudButton Variant="Variant.Filled" DisableElevation="true" OnClick="@(() => _form.ResetValidation())">Reset Validation</MudButton>
-        </MudPaper>
-    </MudItem>
-
-    <MudItem xs="12" sm="5">
-        <MudPaper Class="pa-4 mud-height-full">
-            <MudText Typo="Typo.subtitle2">@($"Errors ({_errors.Length})")</MudText>
-            @foreach (var error in _errors)
-            {
-                <MudText Color="@Color.Error">@error</MudText>
-            }
-        </MudPaper>
-    </MudItem>
-</MudGrid>
+<EditForm Model="@_model" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12" sm="7">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField HelperText="Max. 8 characters"
+                                  @bind-Value="_model.Title" For="@(() => _model.Title)"/>
+                    <MudTextField Class="mt-3"
+                                  @bind-Value="_model.Number" For="@(() => _model.Number)"/>
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Add</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        <MudItem xs="12" sm="5">
+            <MudPaper Class="pa-4 mud-height-full">
+                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
+                @if (_success)
+                {
+                    <MudText Color="Color.Success">Success</MudText>
+                }
+                else
+                {
+                    <MudText Color="@Color.Error">
+                        <ValidationSummary/>
+                    </MudText>
+                }
+            </MudPaper>
+        </MudItem>
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out the form correctly to see the success message.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>
 
 
 @code {
+    readonly ExampleViewModel _model = new();
     bool _success;
-    string[] _errors = { };
-    MudForm _form = null!;
 
-    private void Save()
+    private async void OnValidSubmit(EditContext context)
     {
-        Console.WriteLine(_form.Model);
+        var entity = new ExampleModel { Title = _model.Title, Number = _model.Number, Type = _model.Type };
+        await ExamplesService.Add(entity);
+        _success = true;
+        StateHasChanged();
     }
 
 }

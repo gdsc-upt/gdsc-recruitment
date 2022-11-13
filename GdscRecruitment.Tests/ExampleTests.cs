@@ -33,8 +33,8 @@ public class ExampleTests : TestingBase
         var example2 = DataGenerator.Generate();
 
         // Act
-        var entity1 = await controller.Post(example1);
-        var entity2 = await controller.Post(example2);
+        var entity1 = await controller.Add(example1);
+        var entity2 = await controller.Add(example2);
 
         Assert.NotNull(entity1);
         Assert.NotNull(entity1.Id);

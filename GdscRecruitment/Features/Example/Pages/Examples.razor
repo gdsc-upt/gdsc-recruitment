@@ -27,17 +27,23 @@
 <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
 
 <MudPaper Class="pa-4 mt-4">
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add">Add</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add" OnClick="Log">Add</MudButton>
 </MudPaper>
 
 @code {
-    private bool _hidePosition;
+    private bool _hidePosition = true;
     private bool _loading;
     private IEnumerable<ExampleModel> _elements = new List<ExampleModel>();
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("OnInitializedAsync");
         _elements = await ExamplesService.Get();
+    }
+
+    private static void Log()
+    {
+        Console.WriteLine("Log");
     }
 
 }

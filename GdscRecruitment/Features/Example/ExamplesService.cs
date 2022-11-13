@@ -1,4 +1,3 @@
-using System.Net.Mime;
 using GdscRecruitment.Data;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +22,7 @@ public class ExamplesService
         return await _repository.GetAsync(id);
     }
 
-    public async Task<ExampleModel> Post(ExampleModel entity)
+    public async Task<ExampleModel> Add(ExampleModel entity)
     {
         return await _repository.AddAsync(entity);
     }
