@@ -30,26 +30,11 @@ services.AddAuthentication().AddGoogle(options =>
     options.ClientSecret = configuration["Google:ClientSecret"];
     options.ClaimActions.MapJsonKey(CustomClaimTypes.Picture, "picture", "url");
     options.ClaimActions.MapJsonKey(CustomClaimTypes.EmailVerified, "verified_email", "bool");
-    // options.ClaimActions.Add(new CustomClaimAction("list json data", "json data"));
-    // options.Scope.Add("https://www.googleapis.com/auth/user.phonenumbers.read");
-    // options.Events.OnCreatingTicket = async context =>
-    // {
-    //     var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
-    //     request.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-    //     request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken);
-    //
-    //     var response = await context.Backchannel.SendAsync(request, HttpCompletionOption.ResponseHeadersRead,
-    //         context.HttpContext.RequestAborted);
-    //     response.EnsureSuccessStatusCode();
-    //
-    //     var user = JObject.Parse(await response.Content.ReadAsStringAsync());
-    //     user.WriteJson();
-    //
-    //     // context.RunClaimActions(user);
-    // };
 });
 
 var app = builder.Build();
+
+app.MigrateIfNeeded();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

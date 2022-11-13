@@ -1,8 +1,6 @@
-using System;
+namespace GdscRecruitment.Base.Models;
 
-namespace GdscRecruitment.Base.Entities;
-
-public interface IEntity
+public interface IModel
 {
     string Id { get; set; }
 
