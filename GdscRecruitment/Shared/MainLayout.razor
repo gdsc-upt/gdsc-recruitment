@@ -2,23 +2,16 @@
 
 <PageTitle>GDSC UPT Recruitment App</PageTitle>
 
-<MudThemeProvider/>
+<MudThemeProvider IsDarkMode="true"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 
 <MudLayout>
-    <div class="page">
-        <NavMenu/>
+    <NavMenu/>
 
-        <main>
-            <div class="top-row px-4 auth">
-                <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-                <LoginDisplay/>
-            </div>
-
-            <article class="content px-4">
-                @Body
-            </article>
-        </main>
-    </div>
+    <MudMainContent Class="pt-16 px-16">
+        <MudContainer Class="mt-6">
+            @Body
+        </MudContainer>
+    </MudMainContent>
 </MudLayout>
