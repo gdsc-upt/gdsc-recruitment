@@ -1,7 +1,6 @@
-using GdscBackend.Models.Enums;
 using GdscRecruitment.Base.Models;
 
-namespace GdscRecruitment.Features.Example;
+namespace GdscRecruitment.Features.Example.Models;
 
 public class ExampleModel : Model
 {

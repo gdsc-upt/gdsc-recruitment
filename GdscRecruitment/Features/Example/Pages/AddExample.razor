@@ -1,4 +1,7 @@
 @page "/examples/add"
+@using GdscRecruitment.Features.Example.Models
+@using GdscRecruitment.Utilities
+@attribute [Authorize(Roles = Roles.Admin)]
 @inject ExamplesService ExamplesService
 
 <PageTitle>Add Example</PageTitle>

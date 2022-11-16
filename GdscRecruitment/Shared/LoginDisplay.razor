@@ -1,5 +1,5 @@
-﻿@using System.Security.Claims
-@using GdscRecruitment.Utilities
+﻿@using GdscRecruitment.Utilities
+@using System.Security.Claims
 @inject IHttpContextAccessor HttpContextAccessor
 
 <AuthorizeView>
@@ -35,6 +35,11 @@
         _user = HttpContextAccessor.HttpContext?.User;
         if (_user is null) return;
 
+        foreach (var userClaim in _user.Claims)
+        {
+    // userClaim.WriteJson();
+        }
+        _user.Identity.WriteJson();
         var givenName = _user.FindFirst(ClaimTypes.GivenName);
         _givenName = givenName?.Value ?? _user.Identity?.Name;
 

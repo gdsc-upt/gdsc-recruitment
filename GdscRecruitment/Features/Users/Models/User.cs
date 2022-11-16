@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace GdscRecruitment.Auth;
+namespace GdscRecruitment.Features.Users.Models;
 
 public class User : IdentityUser
 {
     [PersonalData] public string FirstName { get; set; }
     [PersonalData] public string LastName { get; set; }
+    [PersonalData] public string Avatar { get; set; }
 
     public override string ToString()
     {

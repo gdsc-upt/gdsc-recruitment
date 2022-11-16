@@ -14,8 +14,7 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         DbSet = _context.Set<T>();
     }
 
-    private Task<int> Save => _context.SaveChangesAsync();
-    public DbSet<T> DbSet { get; set; }
+    public DbSet<T> DbSet { get; init; }
 
     public async Task<T> AddAsync([NotNull] T entity)
     {
@@ -23,7 +22,7 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         entity.Created = entity.Updated = DateTime.UtcNow;
 
         entity = (await DbSet.AddAsync(entity)).Entity;
-        await Save;
+        await Save();
 
         return entity;
     }
@@ -33,12 +32,12 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         return await DbSet.ToListAsync();
     }
 
-    public async Task<T?> GetAsync([NotNull] string id)
+    public async Task<T?> GetAsync(string id)
     {
         return await DbSet.FirstOrDefaultAsync(e => e.Id == id);
     }
 
-    public async Task<T> UpdateAsync([NotNull] string id, [NotNull] object newEntity)
+    public async Task<T?> UpdateAsync(string id, object newEntity)
     {
         var entity = await GetAsync(id);
         if (entity is null)
@@ -47,13 +46,14 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         }
 
         CheckUpdateObject(entity, newEntity);
+        entity.Updated = DateTime.UtcNow;
 
-        await _context.SaveChangesAsync();
+        await Save();
 
         return DbSet.First(e => e.Id == id);
     }
 
-    public async Task<T> DeleteAsync([NotNull] string id)
+    public async Task<T?> DeleteAsync(string id)
     {
         var entity = await DbSet.FirstOrDefaultAsync(item => item.Id == id);
 
@@ -63,20 +63,25 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         }
 
         entity = DbSet.Remove(entity).Entity;
-        await Save;
+        await Save();
 
         return entity;
     }
 
-    public static void CheckUpdateObject(T originalObj, object updateObj)
+    private Task<int> Save()
     {
-        foreach (var property in updateObj.GetType().GetProperties())
+        return _context.SaveChangesAsync();
+    }
+
+    private static void CheckUpdateObject(T original, object updated)
+    {
+        foreach (var property in updated.GetType().GetProperties())
         {
-            var propValue = property.GetValue(updateObj, null);
-            var originalProp = originalObj.GetType().GetProperty(property.Name);
-            if (propValue is not null && originalProp is not null)
+            var value = property.GetValue(updated, null);
+            var originalProp = original.GetType().GetProperty(property.Name);
+            if (value is not null && originalProp is not null)
             {
-                originalProp.SetValue(originalObj, propValue);
+                originalProp.SetValue(original, value);
             }
         }
     }

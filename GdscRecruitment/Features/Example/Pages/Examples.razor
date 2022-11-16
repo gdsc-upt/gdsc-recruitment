@@ -1,9 +1,11 @@
 ﻿@page "/examples"
+@using GdscRecruitment.Features.Example.Models
+@inherits BaseComponent
 @inject ExamplesService ExamplesService
 
 <PageTitle>Examples</PageTitle>
 
-<MudTable Items="@_elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="@_loading" LoadingProgressColor="Color.Info">
+<MudTable Items="_elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="_loading" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Nr</MudTh>
         <MudTh>Sign</MudTh>
@@ -27,7 +29,7 @@
 <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
 
 <MudPaper Class="pa-4 mt-4">
-    <MudButton Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add" OnClick="Log">Add</MudButton>
+    <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add" OnClick="Log">Add</MudButton>
 </MudPaper>
 
 @code {
@@ -37,6 +39,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        await base.OnInitializedAsync();
         Console.WriteLine("OnInitializedAsync");
         _elements = await ExamplesService.Get();
     }

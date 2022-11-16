@@ -1,0 +1,25 @@
+@using GdscRecruitment.Features.Users.Models
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using GdscRecruitment.Utilities
+@inject UserManager<User> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@code {
+    private User? User { get; set; }
+
+    protected ClaimsPrincipal? ClaimsPrincipal;
+    public bool IsAuthenticated => ClaimsPrincipal?.Identity?.IsAuthenticated ?? false;
+    public bool IsAdmin => ClaimsPrincipal?.IsInRole(Roles.Admin) ?? false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        ClaimsPrincipal = authState.User;
+        User = await UserManager.GetUserAsync(ClaimsPrincipal);
+        Console.WriteLine("IsAuthenticated: " + IsAuthenticated);
+        Console.WriteLine("IsAdmin: " + IsAdmin);
+    }
+
+}

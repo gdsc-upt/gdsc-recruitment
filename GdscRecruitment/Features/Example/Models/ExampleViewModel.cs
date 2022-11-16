@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using GdscBackend.Models.Enums;
 using MudBlazor;
 
-namespace GdscRecruitment.Features.Example;
+namespace GdscRecruitment.Features.Example.Models;
 
 public class ExampleViewModel
 {

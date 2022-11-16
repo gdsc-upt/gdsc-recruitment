@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 
 namespace GdscRecruitment.Utilities;
 
-public static class CustomClaimTypes
+public readonly struct CustomClaimTypes
 {
     public const string Picture = "urn:google:picture";
     public const string EmailVerified = "urn:google:verified";
@@ -19,8 +19,6 @@ public class CustomClaimAction : ClaimAction
     public override void Run(JsonElement userData, ClaimsIdentity identity, string issuer)
     {
         foreach (var jsonProperty in userData.EnumerateObject())
-        {
             Console.WriteLine(jsonProperty.Name + ": " + jsonProperty.Value);
-        }
     }
 }

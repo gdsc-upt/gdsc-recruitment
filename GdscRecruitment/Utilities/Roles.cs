@@ -1,6 +1,6 @@
 namespace GdscRecruitment.Utilities;
 
-public static class Roles
+public readonly struct Roles
 {
     public const string Admin = "Admin";
 }

@@ -1,7 +1,8 @@
+using System.Security.Claims;
 using GdscRecruitment.Areas.Identity;
-using GdscRecruitment.Auth;
 using GdscRecruitment.Data;
 using GdscRecruitment.Features.Example;
+using GdscRecruitment.Features.Users.Models;
 using GdscRecruitment.Utilities;
 using GdscRecruitment.Utilities.Mappers;
 using Microsoft.AspNetCore.Authentication;
@@ -37,6 +38,10 @@ services.AddAuthentication().AddGoogle(options =>
     options.ClientSecret = configuration["Google:ClientSecret"];
     options.ClaimActions.MapJsonKey(CustomClaimTypes.Picture, "picture", "url");
     options.ClaimActions.MapJsonKey(CustomClaimTypes.EmailVerified, "verified_email", "bool");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "string");
+    options.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name", "string");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name", "string");
+    options.ClaimActions.Add(new CustomClaimAction("list json data", "json data"));
 });
 
 var app = builder.Build();

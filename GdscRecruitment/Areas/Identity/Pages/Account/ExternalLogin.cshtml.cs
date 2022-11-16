@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
-using GdscRecruitment.Auth;
+using GdscRecruitment.Features.Users.Models;
 using GdscRecruitment.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
@@ -43,7 +43,7 @@ public class ExternalLogin : PageModel
 
     public async Task<IActionResult> OnGetCallbackAsync(string? returnUrl, string? remoteError)
     {
-        if (remoteError != null)
+        if (remoteError is not null)
         {
             return GoToErrorPage($"Error from external provider: {remoteError}");
         }
@@ -86,6 +86,7 @@ public class ExternalLogin : PageModel
 
         user.FirstName = firstName;
         user.LastName = lastName;
+        user.Avatar = info.Principal.FindFirstValue(CustomClaimTypes.Picture);
 
         returnUrl ??= Url.Content("~/");
         if (existingUser is not null)
@@ -97,13 +98,13 @@ public class ExternalLogin : PageModel
         user.EmailConfirmed = true;
         var createResult = await _userManager.CreateAsync(user);
 
-        if (createResult.Succeeded)
+        if (!createResult.Succeeded)
         {
-            await UpdatePictureLink(info, user);
-            return await HandleNewUserSignIn(user, info, returnUrl);
+            return GoToErrorPage(GetResultErrorString(createResult));
         }
 
-        return GoToErrorPage(GetResultErrorString(createResult));
+        await UpdatePictureLink(info, user);
+        return await HandleNewUserSignIn(user, info, returnUrl);
     }
 
     private async Task UpdatePictureLink(ExternalLoginInfo info, User user)
@@ -132,16 +133,21 @@ public class ExternalLogin : PageModel
         var isFirstUser = await _userManager.Users.CountAsync() == 1;
         if (isFirstUser)
         {
-            if (!await _roleManager.RoleExistsAsync(Roles.Admin))
-            {
-                await _roleManager.CreateAsync(new IdentityRole(Roles.Admin));
-            }
-
-            await _userManager.AddToRoleAsync(user, Roles.Admin);
+            await AddAsAdmin(user);
         }
 
         await _signInManager.SignInAsync(user, false, info.LoginProvider);
         return LocalRedirect(returnUrl);
+    }
+
+    private async Task AddAsAdmin(User user)
+    {
+        if (!await _roleManager.RoleExistsAsync(Roles.Admin))
+        {
+            await _roleManager.CreateAsync(new IdentityRole(Roles.Admin));
+        }
+
+        await _userManager.AddToRoleAsync(user, Roles.Admin);
     }
 
     private string GetCallbackUrl(string code, string userId)
@@ -173,12 +179,11 @@ public class ExternalLogin : PageModel
             return RedirectToPage("./Lockout");
         }
 
-        if (signInResult.IsNotAllowed)
-        {
-            return GoToErrorPage("User cannot sign in without a confirmed account.");
-        }
+        var message = signInResult.IsNotAllowed
+            ? "User cannot sign in without a confirmed account."
+            : "Error signing in with external login provider.";
 
-        return GoToErrorPage("Error signing in with external login provider.");
+        return GoToErrorPage(message);
     }
 
     private LocalRedirectResult GoToErrorPage(string? errorMessage)

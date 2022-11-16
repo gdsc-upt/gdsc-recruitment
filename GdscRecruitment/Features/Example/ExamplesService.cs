@@ -1,4 +1,5 @@
 using GdscRecruitment.Data;
+using GdscRecruitment.Features.Example.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GdscRecruitment.Features.Example;
@@ -27,7 +28,7 @@ public class ExamplesService
         return await _repository.AddAsync(entity);
     }
 
-    public async Task<ExampleModel> Delete([FromRoute] string id)
+    public async Task<ExampleModel?> Delete([FromRoute] string id)
     {
         return await _repository.DeleteAsync(id);
     }

@@ -1,4 +1,4 @@
-namespace GdscBackend.Models.Enums;
+namespace GdscRecruitment.Features.Example;
 
 public enum ExampleTypeEnum
 {
