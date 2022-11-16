@@ -1,37 +1,17 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">GDSC UPT Recruitment App</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
-</div>
+﻿@using GdscRecruitment.Features.Example
+<MudPaper Width="250px" Class="d-inline-flex py-3" Elevation="0">
+    <MudNavMenu Color="Color.Primary" Margin="Margin.Dense" Rounded="true" Class="mud-width-full" Bordered="true">
+        <MudText Typo="Typo.h6" Class="px-4">Recruitment App</MudText>
+        <MudText Typo="Typo.body2" Class="px-4 mud-text-secondary">Build good things together!</MudText>
 
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
+        <MudDivider Class="my-2"/>
 
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="examples">
-                <span class="oi oi-plus" aria-hidden="true"></span> Examples
-            </NavLink>
-        </div>
-        
-    </nav>
-</div>
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="fas fa-house" IconColor="Color.Success">Home</MudNavLink>
+        <MudNavLink Href="@ExampleRoutes.Examples" Icon="fas fa-server" IconColor="Color.Primary">Examples</MudNavLink>
 
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-
-}
+        <MudNavGroup Title="Settings" Icon="fas fa-cogs" IconColor="Color.Primary">
+            <MudNavLink Href="/users" Icon="fas fa-users" IconColor="Color.Primary">Users</MudNavLink>
+            <MudNavLink Href="/security" Icon="fas fa-user-shield" IconColor="Color.Info">Security</MudNavLink>
+        </MudNavGroup>
+    </MudNavMenu>
+</MudPaper>

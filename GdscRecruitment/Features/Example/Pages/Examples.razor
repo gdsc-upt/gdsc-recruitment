@@ -1,4 +1,4 @@
-﻿@page "/examples"
+﻿@attribute [Route(ExampleRoutes.Examples)]
 @using GdscRecruitment.Features.Example.Models
 @inherits BaseComponent
 @inject ExamplesService ExamplesService
@@ -29,7 +29,7 @@
 <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
 
 <MudPaper Class="pa-4 mt-4">
-    <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add">Add</MudButton>
+    <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="@ExampleRoutes.AddExample">Add</MudButton>
 </MudPaper>
 
 @code {
