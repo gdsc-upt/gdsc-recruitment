@@ -1,55 +1,24 @@
-﻿@using GdscRecruitment.Utilities
-@using System.Security.Claims
+﻿@inherits BaseComponent
 @inject IHttpContextAccessor HttpContextAccessor
 
 <AuthorizeView>
     <Authorized>
         <a href="Identity/Account/LogOut">Log out</a>
 
-        <a href="Identity/Account/Manage/Index">Hello, @_name!</a>
+        <a href="Identity/Account/Manage/Index">Hello, @(User?.ToString() ?? "Stranger")!</a>
 
-        @if (_avatar is not null)
+        @if (User?.Avatar is not null)
         {
             <div class="picture-wrapper">
-                <img class="picture" src="@_avatar" alt="@_name" referrerpolicy="no-referrer"/>
+                <img class="picture" src="@User.Avatar" alt="@User.ToString()" referrerpolicy="no-referrer"/>
             </div>
         }
     </Authorized>
 
     <NotAuthorized>
-        <a href="Identity/Account/ExternalLogin?returnUrl=%2Fcounter">Log in</a>
+        <a href="Identity/Account/ExternalLogin">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    private ClaimsPrincipal? _user;
-    private string? _givenName;
-    private string? _surname;
-    private string? _name;
-    private string? _avatar;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-
-        _user = HttpContextAccessor.HttpContext?.User;
-        if (_user is null) return;
-
-        foreach (var userClaim in _user.Claims)
-        {
-    // userClaim.WriteJson();
-        }
-        _user.Identity.WriteJson();
-        var givenName = _user.FindFirst(ClaimTypes.GivenName);
-        _givenName = givenName?.Value ?? _user.Identity?.Name;
-
-        var surname = _user.FindFirst(ClaimTypes.Surname);
-        _surname = surname?.Value ?? "";
-
-        _name = $"{_givenName} {_surname}".Trim();
-
-        var avatar = _user.FindFirst(CustomClaimTypes.Picture);
-        _avatar = avatar?.Value ?? "";
-    }
-
 }

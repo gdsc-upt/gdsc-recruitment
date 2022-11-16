@@ -17,7 +17,7 @@ var configuration = builder.Configuration;
 var services = builder.Services;
 var connectionString = configuration.GetConnectionString("Default");
 
-services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString), ServiceLifetime.Transient);
 services.AddDatabaseDeveloperPageExceptionFilter();
 
 var identityBuilder = services.AddDefaultIdentity<User>(options => options.SignIn.RequireConfirmedAccount = true);

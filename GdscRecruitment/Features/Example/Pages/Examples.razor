@@ -40,8 +40,8 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        Console.WriteLine("OnInitializedAsync");
         _elements = await ExamplesService.Get();
+        Console.WriteLine("OnInitializedAsync");
     }
 
     private static void Log()

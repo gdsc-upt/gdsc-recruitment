@@ -3,23 +3,15 @@
 @using System.Security.Claims
 @using GdscRecruitment.Utilities
 @inject UserManager<User> UserManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @code {
-    private User? User { get; set; }
 
-    protected ClaimsPrincipal? ClaimsPrincipal;
-    public bool IsAuthenticated => ClaimsPrincipal?.Identity?.IsAuthenticated ?? false;
-    public bool IsAdmin => ClaimsPrincipal?.IsInRole(Roles.Admin) ?? false;
+    [CascadingParameter]
+    private Task<AuthenticationState> AuthStateTask { get; set; } = null!;
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        ClaimsPrincipal = authState.User;
-        User = await UserManager.GetUserAsync(ClaimsPrincipal);
-        Console.WriteLine("IsAuthenticated: " + IsAuthenticated);
-        Console.WriteLine("IsAdmin: " + IsAdmin);
-    }
+    protected ClaimsPrincipal ClaimsPrincipal => AuthStateTask.Result.User;
+    protected User? User => UserManager.GetUserAsync(ClaimsPrincipal).Result;
+    protected bool IsAuthenticated => ClaimsPrincipal.Identity?.IsAuthenticated ?? false;
+    protected bool IsAdmin => ClaimsPrincipal.IsInRole(Roles.Admin);
 
 }
