@@ -29,7 +29,7 @@
 <MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
 
 <MudPaper Class="pa-4 mt-4">
-    <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add" OnClick="Log">Add</MudButton>
+    <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="/examples/add">Add</MudButton>
 </MudPaper>
 
 @code {
@@ -41,12 +41,6 @@
     {
         await base.OnInitializedAsync();
         _elements = await ExamplesService.Get();
-        Console.WriteLine("OnInitializedAsync");
-    }
-
-    private static void Log()
-    {
-        Console.WriteLine("Log");
     }
 
 }

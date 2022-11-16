@@ -18,13 +18,12 @@ public class Repository<T> : IRepository<T> where T : class, IModel
 
     public async Task<T> AddAsync([NotNull] T entity)
     {
-        entity.Id = Guid.NewGuid().ToString();
         entity.Created = entity.Updated = DateTime.UtcNow;
 
-        entity = (await DbSet.AddAsync(entity)).Entity;
+        var added = (await DbSet.AddAsync(entity)).Entity;
         await Save();
 
-        return entity;
+        return added;
     }
 
     public async Task<IEnumerable<T>> GetAsync()
@@ -62,10 +61,10 @@ public class Repository<T> : IRepository<T> where T : class, IModel
             return null;
         }
 
-        entity = DbSet.Remove(entity).Entity;
+        var removed = DbSet.Remove(entity).Entity;
         await Save();
 
-        return entity;
+        return removed;
     }
 
     private Task<int> Save()

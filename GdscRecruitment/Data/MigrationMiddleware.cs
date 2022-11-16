@@ -9,12 +9,15 @@ public static class MigrationMiddleware
     /// </summary>
     /// <param name="app">The <see cref="IApplicationBuilder" /> to add the middleware to.</param>
     /// <returns>A boolean indicating if migration occured or not</returns>
-    public static bool MigrateIfNeeded(this IApplicationBuilder app)
+    public static void MigrateIfNeeded(this IApplicationBuilder app)
     {
-        return ShouldMigrate() && app.Migrate();
+        if (ShouldMigrate())
+        {
+            app.Migrate();
+        }
     }
 
-    private static bool Migrate(this IApplicationBuilder app)
+    private static void Migrate(this IApplicationBuilder app)
     {
         Console.WriteLine("Applying migrations...");
 
@@ -25,11 +28,10 @@ public static class MigrationMiddleware
             dbContext.Database.MigrateAsync().Wait();
             Console.WriteLine("Done!");
 
-            return true;
+            return;
         }
 
         Console.WriteLine("DbContext is null. No migrations run!");
-        return false;
     }
 
     private static bool ShouldMigrate()

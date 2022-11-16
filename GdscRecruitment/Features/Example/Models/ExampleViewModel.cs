@@ -5,6 +5,11 @@ namespace GdscRecruitment.Features.Example.Models;
 
 public class ExampleViewModel
 {
+    public ExampleViewModel(string title)
+    {
+        Title = title;
+    }
+
     [Label("Title")]
     [Required]
     [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
