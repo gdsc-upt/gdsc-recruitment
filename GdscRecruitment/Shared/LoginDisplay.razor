@@ -2,16 +2,16 @@
 
 <AuthorizeView>
     <Authorized>
-        <a href="Identity/Account/LogOut">Log out</a>
+        <MudButton Color="Color.Error" Variant="Variant.Outlined" Class="mr-3" StartIcon="fa-sharp fa-solid fa-person-through-window" Href="Identity/Account/LogOut">Log out</MudButton>
 
-        <a href="Identity/Account/Manage/Index">Hello, @(User?.ToString() ?? "Stranger")!</a>
+        <MudButton Color="Color.Primary" Variant="Variant.Outlined" Href="Identity/Account/Manage/Index">
+            Hello, @(User?.ToString() ?? "Stranger")!
 
-        @if (User?.Avatar is not null)
-        {
-            <div class="picture-wrapper">
-                <img class="picture" src="@User.Avatar" alt="@User.ToString()" referrerpolicy="no-referrer"/>
-            </div>
-        }
+            @if (User?.Avatar is not null)
+            {
+                <MudImage Width="40" Src="@User.Avatar" Elevation="25" Class="rounded-lg pl-3" Alt="@User.ToString()" referrerpolicy="no-referrer"/>
+            }
+        </MudButton>
     </Authorized>
 
     <NotAuthorized>
