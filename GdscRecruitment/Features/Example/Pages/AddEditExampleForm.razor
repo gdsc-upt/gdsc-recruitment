@@ -18,9 +18,10 @@
                                   @bind-Value="_viewModel.Number" For="@(() => _viewModel.Number)"/>
                     <div class="d-flex">
                         <MudRadioGroup For="@(() => _viewModel.Type)" @bind-Value="_viewModel.Type" T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
-                            <MudRadio Color="Color.Primary" Option="ExampleTypeEnum.EasyExample">Easy</MudRadio>
-                            <MudRadio Color="Color.Warning" Option="ExampleTypeEnum.NotEasyExample">Hard</MudRadio>
-                            <MudRadio Color="Color.Error" Option="ExampleTypeEnum.WtfExample">WTF</MudRadio>
+                            @foreach (ExampleTypeEnum item in Enum.GetValues(typeof(ExampleTypeEnum)))
+                            {
+                                <MudRadio Color="item.GetDisplayColor()" Option="item">@item.GetDisplayName()</MudRadio>
+                            }
                         </MudRadioGroup>
                     </div>
                 </MudCardContent>
