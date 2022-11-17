@@ -2,7 +2,7 @@ namespace GdscRecruitment.Base.Models;
 
 public interface IModel
 {
-    string Id { get; set; }
+    string Id { get; }
 
     DateTime Created { get; set; }
 

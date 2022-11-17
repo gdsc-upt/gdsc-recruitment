@@ -15,12 +15,12 @@ public class ExamplesService
         _repository = repository;
     }
 
-    public async Task<IEnumerable<ExampleModel>> Get()
+    public async Task<IList<ExampleModel>> Get()
     {
         return (await _repository.GetAsync()).ToList();
     }
 
-    public async Task<ExampleModel?> Get([FromRoute] string id)
+    public async Task<ExampleModel?> Get(string id)
     {
         return await _repository.GetAsync(id);
     }
@@ -35,5 +35,11 @@ public class ExamplesService
     public async Task<ExampleModel?> Delete([FromRoute] string id)
     {
         return await _repository.DeleteAsync(id);
+    }
+
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<ExampleModel?> Update(ExampleModel model)
+    {
+        return await _repository.UpdateAsync(model);
     }
 }

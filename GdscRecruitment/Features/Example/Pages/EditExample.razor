@@ -1,0 +1,39 @@
+@using GdscRecruitment.Features.Example.Models
+@attribute [Route(ExampleRoutes.EditExample)]
+@inject ExamplesService ExamplesService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Edit Example</PageTitle>
+
+@if (Model is not null)
+{
+    <AddEditExampleForm Model="Model"></AddEditExampleForm>
+}
+
+@code {
+
+    [Parameter]
+    public string? Id { get; set; }
+
+    private ExampleModel? Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id is null)
+        {
+            Snackbar.Add("Id is null", Severity.Error);
+            Navigation.NavigateTo(ExampleRoutes.Examples);
+            return;
+        }
+
+        Model = await ExamplesService.Get(Id);
+
+        if (Model is null)
+        {
+            Snackbar.Add($"There's no model with id {Id}", Severity.Error);
+            Navigation.NavigateTo(ExampleRoutes.Examples);
+        }
+    }
+
+}

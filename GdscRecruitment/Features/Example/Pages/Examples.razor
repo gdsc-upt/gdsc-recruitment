@@ -1,46 +1,118 @@
 ﻿@attribute [Route(ExampleRoutes.Examples)]
 @using GdscRecruitment.Features.Example.Models
-@inherits BaseComponent
-@inject ExamplesService ExamplesService
+@using GdscRecruitment.Base.Models
+@inherits BaseComponent<ExamplesService>
+@inject NavigationManager Navigation
 
 <PageTitle>Examples</PageTitle>
 
-<MudTable Items="_elements.Take(4)" Hover="true" Breakpoint="Breakpoint.Sm" Loading="_loading" LoadingProgressColor="Color.Info">
+<AuthorizeView>
+    <AddEditExampleForm OnValidSubmit="FetchData"></AddEditExampleForm>
+</AuthorizeView>
+
+<MudTable Class="mt-5" Loading="_loading" T="ExampleModel" MultiSelection="true" Items="_elements" OnRowClick="NavigateTo" Hover="true" Filter="element => FilterFunc(element, _searchString)" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Examples</MudText>
+        <MudSpacer/>
+        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="fa-solid fa-sharp fa-magnifying-glass" AdornmentColor="Color.Tertiary" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+
     <HeaderContent>
-        <MudTh>Nr</MudTh>
-        <MudTh>Sign</MudTh>
-        <MudTh>Name</MudTh>
-        <MudTh>Position</MudTh>
-        <MudTh>Molar mass</MudTh>
-        <MudTh>Molar mass2</MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => _elements.IndexOf(x))">Nr</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Title)">Title</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Number)">Sign</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ExampleModel, object>(x => x.Type)">Type</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Created)">Created</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Updated)">Updated</MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            Actions
+        </MudTh>
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd DataLabel="Nr">@context.Id</MudTd>
+        <MudTd DataLabel="Nr">@(_elements.IndexOf(context) + 1)</MudTd>
         <MudTd DataLabel="Sign">@context.Title</MudTd>
         <MudTd DataLabel="Name">@context.Type</MudTd>
-        <MudTd DataLabel="Position" HideSmall="_hidePosition">@context.Number</MudTd>
+        <MudTd DataLabel="Position">@context.Number</MudTd>
         <MudTd DataLabel="Molar mass">@context.Created</MudTd>
         <MudTd DataLabel="Molar mass">@context.Updated</MudTd>
+        <MudTd >
+            <MudButton IconColor="Color.Error" StartIcon="fa-solid fa-trash" OnClick="() => Delete(context)"></MudButton>
+        </MudTd>
     </RowTemplate>
+
+    <PagerContent>
+        <MudTablePager/>
+    </PagerContent>
+
+    <LoadingContent>
+        <MudText>Fetching data...</MudText>
+    </LoadingContent>
+
+    <NoRecordsContent>
+        <MudText>There are no records to display.</MudText>
+    </NoRecordsContent>
 </MudTable>
 
-<MudSwitch @bind-Checked="_hidePosition">Hide <b>position</b> when Breakpoint=Xs</MudSwitch>
-<MudSwitch @bind-Checked="_loading">Show Loading</MudSwitch>
-
 <MudPaper Class="pa-4 mt-4">
-    <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="@ExampleRoutes.AddExample">Add</MudButton>
+    <MudTooltip Arrow="true" Text="@AddButtonTooltip" Color="IsAdmin ? Color.Info : Color.Error">
+        <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="@ExampleRoutes.AddExample">Another way to add and example</MudButton>
+    </MudTooltip>
 </MudPaper>
 
 @code {
-    private bool _hidePosition = true;
-    private bool _loading;
-    private IEnumerable<ExampleModel> _elements = new List<ExampleModel>();
+    private string _searchString = "";
+    private bool _loading = true;
+    private string AddButtonTooltip => IsAdmin ? "" : "Only admins can add examples";
+    private IList<ExampleModel> _elements = new List<ExampleModel>();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        _elements = await ExamplesService.Get();
+        await FetchData();
+        _loading = false;
+    }
+
+    private async Task FetchData()
+    {
+        Console.WriteLine("Fetching data...");
+        _elements = await Service.Get();
+    }
+
+    private static bool FilterFunc(ExampleModel element, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (element.Title.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (element.Id.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        return element.Number.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) || $"{element.Title} {element.Number} {element.Id}".Contains(searchString);
+    }
+
+    private void NavigateTo(TableRowClickEventArgs<ExampleModel> tableRowClick)
+    {
+        Navigation.NavigateTo(ExampleRoutes.GetEditPath(tableRowClick.Item.Id));
+    }
+
+    private async Task Delete(IModel context)
+    {
+        _loading = true;
+        await Service.Delete(context.Id);
+        await FetchData();
+        _loading = false;
     }
 
 }

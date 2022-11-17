@@ -3,7 +3,7 @@ $(eval $(RUN_ARGS):;@:)
 MAIN_PROJECT := GdscRecruitment
 
 run: $(MAIN_PROJECT)/appsettings.Development.json
-	dotnet watch run --project $(MAIN_PROJECT) --launch-profile $(MAIN_PROJECT) $(RUN_ARGS)
+	dotnet watch --project $(MAIN_PROJECT) -- run --launch-profile $(MAIN_PROJECT) $(RUN_ARGS)
 
 migrations: $(MAIN_PROJECT)/appsettings.Development.json
 	dotnet ef migrations add $(RUN_ARGS) --startup-project $(MAIN_PROJECT)

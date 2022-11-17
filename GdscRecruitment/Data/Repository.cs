@@ -18,8 +18,6 @@ public class Repository<T> : IRepository<T> where T : class, IModel
 
     public async Task<T> AddAsync([NotNull] T entity)
     {
-        entity.Created = entity.Updated = DateTime.UtcNow;
-
         var added = (await DbSet.AddAsync(entity)).Entity;
         await Save();
 
@@ -50,6 +48,21 @@ public class Repository<T> : IRepository<T> where T : class, IModel
         await Save();
 
         return DbSet.First(e => e.Id == id);
+    }
+
+    public async Task<T?> UpdateAsync(T entity)
+    {
+        var existingEntity = await GetAsync(entity.Id);
+        if (existingEntity is null)
+        {
+            return null;
+        }
+
+        entity.Updated = DateTime.UtcNow;
+
+        await Save();
+
+        return DbSet.First(e => e.Id == entity.Id);
     }
 
     public async Task<T?> DeleteAsync(string id)

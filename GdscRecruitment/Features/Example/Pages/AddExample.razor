@@ -1,66 +1,10 @@
-@using GdscRecruitment.Features.Example.Models
 @attribute [Route(ExampleRoutes.AddExample)]
-@inject ExamplesService ExamplesService
 
 <PageTitle>Add Example</PageTitle>
 
-<EditForm Model="@_model" OnValidSubmit="OnValidSubmit">
-    <DataAnnotationsValidator/>
-    <MudGrid>
-        <MudItem xs="12" sm="7">
-            <MudCard>
-                <MudCardContent>
-                    <MudTextField HelperText="Max. 8 characters"
-                                  @bind-Value="_model.Title" For="@(() => _model.Title)"/>
-                    <MudTextField Class="mt-3"
-                                  @bind-Value="_model.Number" For="@(() => _model.Number)"/>
-                    <div class="d-flex">
-                        <MudRadioGroup For="@(() => _model.Type)" @bind-Value="_model.Type" T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
-                            <MudRadio Option="ExampleTypeEnum.EasyExample">Easy</MudRadio>
-                            <MudRadio Option="ExampleTypeEnum.NotEasyExample">Hard</MudRadio>
-                            <MudRadio Option="ExampleTypeEnum.WtfExample">WTF</MudRadio>
-                        </MudRadioGroup>
-                    </div>
-                </MudCardContent>
-                <MudCardActions>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Add</MudButton>
-                </MudCardActions>
-            </MudCard>
-        </MudItem>
-        <MudItem xs="12" sm="5">
-            <MudPaper Class="pa-4 mud-height-full">
-                <MudText Typo="Typo.subtitle2">Validation Summary</MudText>
-                @if (_success)
-                {
-                    <MudText Color="Color.Success">Success</MudText>
-                }
-                else
-                {
-                    <MudText Color="@Color.Error">
-                        <ValidationSummary/>
-                    </MudText>
-                }
-            </MudPaper>
-        </MudItem>
-        <MudItem xs="12">
-            <MudText Typo="Typo.body2" Align="Align.Center">
-                Fill out the form correctly to see the success message.
-            </MudText>
-        </MudItem>
-    </MudGrid>
-</EditForm>
-
+<AddEditExampleForm></AddEditExampleForm>
 
 @code {
-    readonly ExampleViewModel _model = new("");
-    bool _success;
 
-    private async void OnValidSubmit(EditContext context)
-    {
-        var entity = new ExampleModel(_model.Title) { Number = _model.Number, Type = _model.Type };
-        await ExamplesService.Add(entity);
-        _success = true;
-        StateHasChanged();
-    }
 
 }

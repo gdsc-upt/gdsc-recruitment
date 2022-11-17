@@ -15,6 +15,7 @@ public interface IRepository<T> where T : class, IModel
     Task<IEnumerable<T>> GetAsync();
 
     Task<T?> UpdateAsync(string id, object newEntity);
+    Task<T?> UpdateAsync(T entity);
 
     Task<T?> DeleteAsync(string id);
 }

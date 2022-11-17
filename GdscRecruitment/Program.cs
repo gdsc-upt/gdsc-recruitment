@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -25,7 +26,12 @@ identityBuilder.AddRoles<IdentityRole>().AddEntityFrameworkStores<ApplicationDbC
 
 services.AddRazorPages();
 services.AddServerSideBlazor();
-services.AddMudServices();
+services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+    config.SnackbarConfiguration.VisibleStateDuration = 5000;
+    config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+});
 services.AddAutoMapper(typeof(MappingProfiles));
 
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));

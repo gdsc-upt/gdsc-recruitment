@@ -7,6 +7,25 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GdscRecruitment.Shared;
 
+public abstract class BaseComponent<T> : BaseComponent where T : class
+{
+    private T? _service;
+
+    protected T Service
+    {
+        get
+        {
+            if (IsDisposed)
+            {
+                throw new ObjectDisposedException(GetType().Name);
+            }
+
+            // We cache this because we don't know the lifetime. We have to assume that it could be transient.
+            return _service ??= ScopedServices.GetRequiredService<T>();
+        }
+    }
+}
+
 public abstract class BaseComponent : OwningComponentBase
 {
     private UserManager<User>? _userManager;
