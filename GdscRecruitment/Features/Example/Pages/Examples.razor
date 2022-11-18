@@ -11,7 +11,9 @@
     <AddEditExampleForm OnValidSubmit="FetchData"></AddEditExampleForm>
 </AuthorizeView>
 
-<MudTable Class="mt-5" Loading="_loading" T="ExampleModel" MultiSelection="true" Items="_elements" OnRowClick="NavigateTo" Hover="true" Filter="element => FilterFunc(element, _searchString)" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+@Actions
+
+<MudTable Class="mt-5" Loading="_loading" @bind-SelectedItems="_selected" T="ExampleModel" MultiSelection="true" Items="_elements" OnRowClick="NavigateTo" Hover="true" Filter="element => FilterFunc(element, _searchString)" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Examples</MudText>
         <MudSpacer/>
@@ -19,9 +21,6 @@
     </ToolBarContent>
 
     <HeaderContent>
-        <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => _elements.IndexOf(x))">Nr</MudTableSortLabel>
-        </MudTh>
         <MudTh>
             <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Title)">Title</MudTableSortLabel>
         </MudTh>
@@ -43,7 +42,6 @@
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd DataLabel="Nr">@(_elements.IndexOf(context) + 1)</MudTd>
         <MudTd DataLabel="Sign">@context.Title</MudTd>
         <MudTd DataLabel="Name">
             <MudText Color="@context.Type.GetDisplayColor()">@context.Type</MudText>
@@ -69,17 +67,14 @@
     </NoRecordsContent>
 </MudTable>
 
-<MudPaper Class="pa-4 mt-4">
-    <MudTooltip Arrow="true" Text="@AddButtonTooltip" Color="IsAdmin ? Color.Info : Color.Error">
-        <MudButton Disabled="!IsAdmin" Variant="Variant.Filled" Color="Color.Primary" DisableElevation="true" Href="@ExampleRoutes.AddExample">Another way to add and example</MudButton>
-    </MudTooltip>
-</MudPaper>
+@Actions
 
 @code {
     private string _searchString = "";
     private bool _loading = true;
     private string AddButtonTooltip => IsAdmin ? "" : "Only admins can add examples";
     private IList<ExampleModel> _elements = new List<ExampleModel>();
+    private HashSet<ExampleModel> _selected = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -117,5 +112,16 @@
         await FetchData();
         _loading = false;
     }
+
+    private RenderFragment Actions =>
+        @<MudPaper Class="pa-4 mt-4 d-flex">
+            <MudButton Disabled="@(!IsAdmin && _selected.Count > 0)" Variant="Variant.Outlined" IconColor="Color.Error" Color="Color.Error" StartIcon="fa-solid fa-dumpster" DisableElevation="true">Delete</MudButton>
+
+            <MudSpacer></MudSpacer>
+
+            <MudTooltip Arrow="true" Text="@AddButtonTooltip" Color="IsAdmin ? Color.Info : Color.Error">
+                <MudButton Disabled="@(!IsAdmin)" Variant="Variant.Filled" Color="Color.Primary" IconColor="Color.Surface" StartIcon="fa-solid fa-square-arrow-up-right" DisableElevation="true" Href="@ExampleRoutes.AddExample">Open Add page</MudButton>
+            </MudTooltip>
+        </MudPaper>;
 
 }

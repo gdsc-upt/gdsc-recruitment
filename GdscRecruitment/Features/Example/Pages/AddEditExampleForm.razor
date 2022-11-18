@@ -17,10 +17,10 @@
                     <MudTextField Class="mt-3"
                                   @bind-Value="_viewModel.Number" For="@(() => _viewModel.Number)"/>
                     <div class="d-flex">
-                        <MudRadioGroup For="@(() => _viewModel.Type)" @bind-Value="_viewModel.Type" T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
+                        <MudRadioGroup For="@(() => _viewModel.Type)" @bind-SelectedOption="_viewModel.Type" T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
                             @foreach (ExampleTypeEnum item in Enum.GetValues(typeof(ExampleTypeEnum)))
                             {
-                                <MudRadio Color="item.GetDisplayColor()" Option="item">@item.GetDisplayName()</MudRadio>
+                                <MudRadio Color="item.GetDisplayColor()" Option="@(item)">@item.GetDisplayName()</MudRadio>
                             }
                         </MudRadioGroup>
                     </div>

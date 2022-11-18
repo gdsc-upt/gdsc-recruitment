@@ -9,7 +9,7 @@
 
             @if (User?.Avatar is not null)
             {
-                <MudImage Width="40" Src="@User.Avatar" Elevation="25" Class="rounded-lg pl-3" Alt="@User.ToString()" referrerpolicy="no-referrer"/>
+                <MudAvatar Variant="Variant.Outlined" Color="Color.Tertiary" Style="width: 27px; height: 27px" Image="@User.Avatar" Elevation="25" Class="ml-3" Alt="@User.ToString()" referrerpolicy="no-referrer"/>
             }
         </MudButton>
     </Authorized>
