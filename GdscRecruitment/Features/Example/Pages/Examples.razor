@@ -17,28 +17,66 @@
 
 @TableActions
 
-<MudTable Class="mt-5" Loading="_loading" @bind-SelectedItems="_selected" T="ExampleViewModel" MultiSelection="true" Items="_elements" OnRowClick="NavigateTo" Hover="true" Filter="element => FilterFunc(element, _searchString)" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable
+    Class="mt-5"
+    Loading="_loading"
+    @bind-SelectedItems="_selected"
+    T="ExampleViewModel"
+    MultiSelection="true"
+    Items="_elements"
+    OnRowClick="NavigateTo"
+    Hover="true"
+    Filter="element => FilterFunc(element, _searchString)"
+    Breakpoint="Breakpoint.Sm"
+    LoadingProgressColor="Color.Info">
+
     <ToolBarContent>
         <MudText Typo="Typo.h6">Examples</MudText>
+
         <MudSpacer/>
-        <MudTextField @bind-Value="_searchString" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="fa-solid fa-sharp fa-magnifying-glass" AdornmentColor="Color.Tertiary" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+
+        <MudTextField
+            @bind-Value="_searchString"
+            Placeholder="Search"
+            Adornment="Adornment.Start"
+            AdornmentIcon="fa-solid fa-sharp fa-magnifying-glass"
+            AdornmentColor="Color.Tertiary"
+            IconSize="Size.Medium"
+            Class="mt-0">
+        </MudTextField>
     </ToolBarContent>
 
     <HeaderContent>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Title)">@Html.GetLabel(x => x.Title)</MudTableSortLabel>
+            <MudTableSortLabel
+                SortBy="new Func<ExampleModel, object>(x => x.Title)">
+                @Html.GetLabel(x => x.Title)
+            </MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Number)">@Html.GetLabel(x => x.Number)</MudTableSortLabel>
+            <MudTableSortLabel
+                SortBy="new Func<ExampleModel, object>(x => x.Number)">
+                @Html.GetLabel(x => x.Number)
+            </MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ExampleModel, object>(x => x.Type)">@Html.GetLabel(x => x.Type)</MudTableSortLabel>
+            <MudTableSortLabel
+                InitialDirection="SortDirection.Ascending"
+                SortBy="new Func<ExampleModel, object>(x => x.Type)">
+                @Html.GetLabel(x => x.Type)
+            </MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Created)">@Html.GetLabel(x => x.Created)</MudTableSortLabel>
+            <MudTableSortLabel
+                SortBy="new Func<ExampleModel, object>(x => x.Created)">
+                @Html.GetLabel(x => x.Created)
+            </MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Updated)">@Html.GetLabel(x => x.Updated)</MudTableSortLabel>
+            <MudTableSortLabel
+                SortBy="new Func<ExampleModel, object>(x => x.Updated)">
+                @Html.GetLabel(x => x.Updated)
+            </MudTableSortLabel>
         </MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
@@ -54,7 +92,11 @@
         <MudTd DataLabel="@Html.GetLabel(x => x.Created)">@context.Created </MudTd>
         <MudTd DataLabel="@Html.GetLabel(x => x.Updated)">@context.Updated </MudTd>
         <MudTd>
-            <MudButton IconColor="Color.Error" StartIcon="fa-solid fa-trash" OnClick="() => Delete(context)"></MudButton>
+            <MudButton
+                IconColor="Color.Error"
+                StartIcon="fa-solid fa-trash"
+                OnClick="() => Delete(context)">
+            </MudButton>
         </MudTd>
     </RowTemplate>
 

@@ -12,12 +12,24 @@
         <MudItem xs="12">
             <MudCard>
                 <MudCardContent>
-                    <MudTextField HelperText="Max. 8 characters"
-                                  @bind-Value="_viewModel.Title" For="@(() => _viewModel.Title)"/>
-                    <MudTextField Class="mt-3"
-                                  @bind-Value="_viewModel.Number" For="@(() => _viewModel.Number)"/>
+                    <MudTextField
+                        HelperText="Max. 8 characters"
+                        @bind-Value="_viewModel.Title"
+                        For="@(() => _viewModel.Title)"/>
+
+                    <MudTextField
+                        Class="mt-3"
+                        @bind-Value="_viewModel.Number"
+                        For="@(() => _viewModel.Number)"/>
+
                     <div class="d-flex">
-                        <MudRadioGroup For="@(() => _viewModel.Type)" @bind-SelectedOption="_viewModel.Type" T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
+                        <MudRadioGroup
+                            For="@(() => _viewModel.Type)"
+                            @bind-SelectedOption="_viewModel.Type"
+                            T="ExampleTypeEnum"
+                            Required="true"
+                            RequiredError="Account type is required!">
+
                             @foreach (ExampleTypeEnum item in Enum.GetValues(typeof(ExampleTypeEnum)))
                             {
                                 var color = item.GetColor();
@@ -25,16 +37,37 @@
                                     <MudRadio Color="color" Option="item">@item.GetName()</MudRadio>
                                 </MudTooltip>
                             }
+
                         </MudRadioGroup>
                     </div>
                 </MudCardContent>
+
                 <MudCardActions>
-                    <MudButton Variant="Variant.Outlined" Color="Color.Primary" StartIcon="fa-solid fa-circle-left" IconColor="Color.Primary" Class="ml-auto" OnClick="GoBack">Back</MudButton>
+                    <MudButton
+                        Variant="Variant.Outlined"
+                        Color="Color.Primary"
+                        StartIcon="fa-solid fa-circle-left"
+                        IconColor="Color.Primary"
+                        Class="ml-auto"
+                        OnClick="GoBack">
+                        Back
+                    </MudButton>
+
                     <MudSpacer></MudSpacer>
-                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="fa-solid fa-circle-check" IconColor="Color.Surface" Color="Color.Success" Class="ml-auto">@(IsEdit ? "Update" : "Add")</MudButton>
+
+                    <MudButton
+                        ButtonType="ButtonType.Submit"
+                        Variant="Variant.Filled"
+                        StartIcon="fa-solid fa-circle-check"
+                        IconColor="Color.Surface"
+                        Color="Color.Success"
+                        Class="ml-auto">
+                        @(IsEdit ? "Update" : "Add")
+                    </MudButton>
                 </MudCardActions>
             </MudCard>
         </MudItem>
+
         <MudItem xs="12">
             <MudText Typo="Typo.body2" Align="Align.Center">
                 Fill out the form correctly to see the success message.

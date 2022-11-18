@@ -14,7 +14,11 @@
 
             <MudSpacer></MudSpacer>
 
-            <PrimaryButton Text="Open Add page" Href="@ExampleRoutes.AddExample" Tooltip="Add new example"></PrimaryButton>
+            <PrimaryButton
+                Text="Open Add page"
+                Href="@ExampleRoutes.AddExample"
+                Tooltip="Add new example">
+            </PrimaryButton>
         </Authorized>
 
         <NotAuthorized>
@@ -26,7 +30,11 @@
 
             <MudSpacer></MudSpacer>
 
-            <PrimaryButton Text="Open add page" Disabled="true" Tooltip="Only admins can add"></PrimaryButton>
+            <PrimaryButton
+                Text="Open add page"
+                Disabled="true"
+                Tooltip="Only admins can add">
+            </PrimaryButton>
         </NotAuthorized>
     </AuthorizeView>
 </MudPaper>
@@ -35,12 +43,5 @@
 
     [Parameter]
     public HashSet<ExampleViewModel> SelectedItems { get; set; } = new();
-
-    private class OpenAddPageButtonProps
-    {
-        public bool Disabled { get; init; }
-        public Color Color { get; init; } = Color.Default;
-        public string Tooltip { get; init; } = string.Empty;
-    }
 
 }
