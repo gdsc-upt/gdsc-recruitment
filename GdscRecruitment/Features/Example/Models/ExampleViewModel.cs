@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using GdscRecruitment.Base;
 using MudBlazor;
 
 namespace GdscRecruitment.Features.Example.Models;
 
-public class ExampleViewModel
+public class ExampleViewModel : ViewModel
 {
     public ExampleViewModel(string title)
     {
@@ -12,7 +13,7 @@ public class ExampleViewModel
 
     [Label("Title")]
     [Required]
-    [StringLength(8, ErrorMessage = "Name length can't be more than 8.")]
+    [StringLength(8, MinimumLength = 2, ErrorMessage = "Name length can't be less than 2 and more than 8.")]
     public string Title { get; set; }
 
     [Label("Type")] public ExampleTypeEnum Type { get; set; }

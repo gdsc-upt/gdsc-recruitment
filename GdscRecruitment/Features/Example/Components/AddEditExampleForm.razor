@@ -20,7 +20,10 @@
                         <MudRadioGroup For="@(() => _viewModel.Type)" @bind-SelectedOption="_viewModel.Type" T="ExampleTypeEnum" Required="true" RequiredError="Account type is required!">
                             @foreach (ExampleTypeEnum item in Enum.GetValues(typeof(ExampleTypeEnum)))
                             {
-                                <MudRadio Color="item.GetDisplayColor()" Option="@(item)">@item.GetDisplayName()</MudRadio>
+                                var color = item.GetColor();
+                                <MudTooltip Color="color" Arrow="true" Text="@item.GetDescription()">
+                                    <MudRadio Color="color" Option="item">@item.GetName()</MudRadio>
+                                </MudTooltip>
                             }
                         </MudRadioGroup>
                     </div>

@@ -1,19 +1,23 @@
 ﻿@attribute [Route(ExampleRoutes.Examples)]
 @using GdscRecruitment.Utilities
+@using AutoMapper
 @using GdscRecruitment.Features.Example.Models
-@using GdscRecruitment.Base.Models
-@inherits BaseComponent<ExamplesService>
+@using GdscRecruitment.Base
+@using GdscRecruitment.Features.Example.Components
+@inherits OwningComponentBase<ExamplesService>
 @inject NavigationManager Navigation
+@inject IMapper Mapper
+@inject Html<ExampleViewModel> Html
 
 <PageTitle>Examples</PageTitle>
 
-<AuthorizeView>
+<AuthorizeView Roles="@Roles.Admin">
     <AddEditExampleForm OnValidSubmit="FetchData"></AddEditExampleForm>
 </AuthorizeView>
 
-@Actions
+@TableActions
 
-<MudTable Class="mt-5" Loading="_loading" @bind-SelectedItems="_selected" T="ExampleModel" MultiSelection="true" Items="_elements" OnRowClick="NavigateTo" Hover="true" Filter="element => FilterFunc(element, _searchString)" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable Class="mt-5" Loading="_loading" @bind-SelectedItems="_selected" T="ExampleViewModel" MultiSelection="true" Items="_elements" OnRowClick="NavigateTo" Hover="true" Filter="element => FilterFunc(element, _searchString)" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <ToolBarContent>
         <MudText Typo="Typo.h6">Examples</MudText>
         <MudSpacer/>
@@ -22,34 +26,34 @@
 
     <HeaderContent>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Title)">Title</MudTableSortLabel>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Title)">@Html.GetLabel(x => x.Title)</MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Number)">Sign</MudTableSortLabel>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Number)">@Html.GetLabel(x => x.Number)</MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ExampleModel, object>(x => x.Type)">Type</MudTableSortLabel>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ExampleModel, object>(x => x.Type)">@Html.GetLabel(x => x.Type)</MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Created)">Created</MudTableSortLabel>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Created)">@Html.GetLabel(x => x.Created)</MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Updated)">Updated</MudTableSortLabel>
+            <MudTableSortLabel SortBy="new Func<ExampleModel, object>(x => x.Updated)">@Html.GetLabel(x => x.Updated)</MudTableSortLabel>
         </MudTh>
-        <MudTh>
-            Actions
-        </MudTh>
+        <MudTh>Actions</MudTh>
     </HeaderContent>
 
     <RowTemplate>
-        <MudTd DataLabel="Sign">@context.Title</MudTd>
-        <MudTd DataLabel="Name">
-            <MudText Color="@context.Type.GetDisplayColor()">@context.Type</MudText>
+        <MudTd DataLabel="@Html.GetLabel(x => x.Title)">@context.Title </MudTd>
+        <MudTd DataLabel="@Html.GetLabel(x => x.Type)">
+            <MudTooltip Color="@context.Type.GetColor()" Text="@context.Type.GetDescription()" Arrow="true">
+                <MudText Color="@context.Type.GetColor()">@context.Type.GetName()</MudText>
+            </MudTooltip>
         </MudTd>
-        <MudTd DataLabel="Position">@context.Number</MudTd>
-        <MudTd DataLabel="Molar mass">@context.Created</MudTd>
-        <MudTd DataLabel="Molar mass">@context.Updated</MudTd>
-        <MudTd >
+        <MudTd DataLabel="@Html.GetLabel(x => x.Number)">@context.Number </MudTd>
+        <MudTd DataLabel="@Html.GetLabel(x => x.Created)">@context.Created </MudTd>
+        <MudTd DataLabel="@Html.GetLabel(x => x.Updated)">@context.Updated </MudTd>
+        <MudTd>
             <MudButton IconColor="Color.Error" StartIcon="fa-solid fa-trash" OnClick="() => Delete(context)"></MudButton>
         </MudTd>
     </RowTemplate>
@@ -67,14 +71,15 @@
     </NoRecordsContent>
 </MudTable>
 
-@Actions
+@TableActions
 
 @code {
     private string _searchString = "";
     private bool _loading = true;
-    private string AddButtonTooltip => IsAdmin ? "" : "Only admins can add examples";
-    private IList<ExampleModel> _elements = new List<ExampleModel>();
-    private HashSet<ExampleModel> _selected = new();
+    private IList<ExampleViewModel> _elements = new List<ExampleViewModel>();
+    private HashSet<ExampleViewModel> _selected = new();
+
+    private RenderFragment TableActions => @<ExamplesTableActions SelectedItems="@_selected"></ExamplesTableActions>;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,10 +91,10 @@
     private async Task FetchData()
     {
         Console.WriteLine("Fetching data...");
-        _elements = await Service.Get();
+        _elements = Map(await Service.Get());
     }
 
-    private static bool FilterFunc(ExampleModel element, string searchString)
+    private static bool FilterFunc(ExampleViewModel element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
@@ -100,12 +105,12 @@
         return element.Number.ToString().Contains(searchString, StringComparison.OrdinalIgnoreCase) || $"{element.Title} {element.Number} {element.Id}".Contains(searchString);
     }
 
-    private void NavigateTo(TableRowClickEventArgs<ExampleModel> tableRowClick)
+    private void NavigateTo(TableRowClickEventArgs<ExampleViewModel> tableRowClick)
     {
         Navigation.NavigateTo(ExampleRoutes.GetEditPath(tableRowClick.Item.Id));
     }
 
-    private async Task Delete(IModel context)
+    private async Task Delete(ViewModel context)
     {
         _loading = true;
         await Service.Delete(context.Id);
@@ -113,15 +118,9 @@
         _loading = false;
     }
 
-    private RenderFragment Actions =>
-        @<MudPaper Class="pa-4 mt-4 d-flex">
-            <MudButton Disabled="@(!IsAdmin && _selected.Count > 0)" Variant="Variant.Outlined" IconColor="Color.Error" Color="Color.Error" StartIcon="fa-solid fa-dumpster" DisableElevation="true">Delete</MudButton>
-
-            <MudSpacer></MudSpacer>
-
-            <MudTooltip Arrow="true" Text="@AddButtonTooltip" Color="IsAdmin ? Color.Info : Color.Error">
-                <MudButton Disabled="@(!IsAdmin)" Variant="Variant.Filled" Color="Color.Primary" IconColor="Color.Surface" StartIcon="fa-solid fa-square-arrow-up-right" DisableElevation="true" Href="@ExampleRoutes.AddExample">Open Add page</MudButton>
-            </MudTooltip>
-        </MudPaper>;
+    private IList<ExampleViewModel> Map(IList<ExampleModel> models)
+    {
+        return Mapper.Map<List<ExampleViewModel>>(models);
+    }
 
 }
