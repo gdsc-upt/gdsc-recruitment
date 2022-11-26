@@ -1,7 +1,9 @@
 using AutoMapper;
 using GdscRecruitment.Data;
+using GdscRecruitment.Features.Responses.Models;
+using GdscRecruitment.Features.Responses.Views;
 
-namespace GdscRecruitment.Features.Forms;
+namespace GdscRecruitment.Features.Responses;
 
 public class ResponsesService
 {

@@ -1,6 +1,6 @@
 using GdscRecruitment.Base.Models;
 
-namespace GdscRecruitment.Features.Forms;
+namespace GdscRecruitment.Features.Fields.Models;
 
 public class FieldModel : Model
 {

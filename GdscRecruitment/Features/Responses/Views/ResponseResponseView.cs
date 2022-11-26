@@ -1,4 +1,4 @@
-namespace GdscRecruitment.Features.Forms;
+namespace GdscRecruitment.Features.Responses.Views;
 
 public class ResponseResponseView
 {

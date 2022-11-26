@@ -1,0 +1,39 @@
+@page "/fields/edit"
+@using GdscRecruitment.Features.Fields.Models
+@using GdscRecruitment.Features.Fields.Components
+@inject FieldsService FieldsService
+@inject NavigationManager Navigation
+@inject ISnackbar Snackbar
+
+<PageTitle>Edit Fields</PageTitle>
+
+@if (Model is not null)
+{
+    <AddEditFieldsForm Model="Model"></AddEditFieldsForm>
+}
+
+@code {
+    [Parameter]
+    public string? Id { get; set; }
+    
+    private FieldModel? Model { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Id is null)
+        {
+            Snackbar.Add("Id is null", Severity.Error);
+            Navigation.NavigateTo("/fields");
+            return;
+        }
+
+        Model = await FieldsService.Get(Id);
+
+        if (Model is null)
+        {
+            Snackbar.Add($"There is no model with id {Id}");
+            Navigation.NavigateTo("/fields");
+        }
+    }
+
+}
