@@ -1,5 +1,6 @@
 ﻿using GdscRecruitment.Features.Example.Models;
-using GdscRecruitment.Features.Forms;
+using GdscRecruitment.Features.Fields.Models;
+using GdscRecruitment.Features.Responses.Models;
 using GdscRecruitment.Features.Users.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

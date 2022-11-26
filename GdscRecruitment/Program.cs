@@ -2,6 +2,7 @@ using System.Security.Claims;
 using GdscRecruitment.Areas.Identity;
 using GdscRecruitment.Data;
 using GdscRecruitment.Features.Example;
+using GdscRecruitment.Features.Fields;
 using GdscRecruitment.Features.Users.Models;
 using GdscRecruitment.Utilities;
 using GdscRecruitment.Utilities.Mappers;
@@ -36,6 +37,7 @@ services.AddAutoMapper(typeof(MappingProfiles));
 
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 services.AddScoped<ExamplesService>();
+services.AddScoped<FieldsService>();
 services.AddScoped(typeof(Html<>));
 services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 

@@ -1,8 +1,12 @@
 using AutoMapper;
 using GdscRecruitment.Data;
+using GdscRecruitment.Features.Fields.Models;
+using GdscRecruitment.Features.Fields.Views;
+using GdscRecruitment.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
-namespace GdscRecruitment.Features.Forms;
+namespace GdscRecruitment.Features.Fields;
 
 public class FieldsService 
 {
@@ -28,7 +32,7 @@ public class FieldsService
         return list;
     }
     
-    public async Task<FieldResponseView> Get(string id)
+    public async Task<FieldModel> Get(string id)
     {
         var field = await _repository.DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
         if (field is null)
@@ -36,16 +40,17 @@ public class FieldsService
             return null;
         }
 
-        return _mapper.Map<FieldResponseView>(field);
+        return field;
     }
     
-    public async Task<FieldResponseView> Add(FieldRequestView fieldRequest)
+    [Authorize(Roles = Roles.Admin)]
+    public async Task<FieldModel> Add(FieldRequestView fieldRequest)
     {
-        var newField = await _repository.AddAsync(_mapper.Map<FieldModel>(fieldRequest));
-
-        return _mapper.Map<FieldResponseView>(newField);
+        var newEntity = _mapper.Map<FieldModel>(fieldRequest);
+        return await _repository.AddAsync(newEntity);
     }
-
+    
+    [Authorize(Roles = Roles.Admin)]
     public async Task<FieldResponseView> Delete(string id)
     {
        var entity =  await _repository.DeleteAsync(id);
@@ -55,7 +60,8 @@ public class FieldsService
        }
        return _mapper.Map<FieldResponseView>(entity);
     }
-
+    
+    [Authorize(Roles = Roles.Admin)]
     public async Task<FieldResponseView> Update(string id, FieldRequestView fieldRequestView)
     {
         return _mapper.Map<FieldResponseView>(await _repository.UpdateAsync(id, fieldRequestView));
