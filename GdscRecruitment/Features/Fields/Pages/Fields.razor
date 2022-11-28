@@ -1,12 +1,12 @@
 @page "/fields"
+@inject NavigationManager Navigation
 @using GdscRecruitment.Features.Fields.Views
 @using GdscRecruitment.Utilities
-@using GdscRecruitment.Features.Example
 @using GdscRecruitment.Features.Fields.Models
+@using GdscRecruitment.Features.Example
 @using GdscRecruitment.Features.Fields.Components
-@inject NavigationManager Navigation
 @inherits OwningComponentBase<FieldsService>
-@inject Html<FieldResponseView> Html
+@inject ViewModelHelper<FieldResponseView> Helper
 
 <PageTitle>Fields</PageTitle>
 
@@ -28,10 +28,10 @@
     Filter="element => FilterFunc(element, _searchingString)"
     Breakpoint="Breakpoint.Sm"
     LoadingProgressColor="Color.Info">
-    
+
     <ToolBarContent>
         <MudText Typo="Typo.h6">Fields</MudText>
-        
+
         <MudSpacer/>
         <MudTextField
             @bind-Value="_searchingString"
@@ -43,33 +43,33 @@
             Class="mt-0">
         </MudTextField>
     </ToolBarContent>
-    
+
     <HeaderContent>
         <MudTh>
             <MudTableSortLabel
                 SortBy="new Func<FieldModel, object>(x => x.Name)">
-                @Html.GetLabel(x => x.Name)
+                @Helper.GetLabel(x => x.Name)
             </MudTableSortLabel>
         </MudTh>
         <MudTh>
             <MudTableSortLabel
-                SortBy="new Func<FieldModel,object>(x => x.IsRequired)">
-                @Html.GetLabel(x => x.IsRequired)
+                SortBy="new Func<FieldModel, object>(x => x.IsRequired)">
+                @Helper.GetLabel(x => x.IsRequired)
             </MudTableSortLabel>
         </MudTh>
         <MudTh>
             <MudTableSortLabel
                 SortBy="new Func<FieldModel, object>(x => x.Placeholder)">
-                @Html.GetLabel(x => x.Placeholder)
+                @Helper.GetLabel(x => x.Placeholder)
             </MudTableSortLabel>
         </MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
-    
+
     <RowTemplate>
-        <MudTd DataLabel="@Html.GetLabel(x => x.Name)">@context.Name</MudTd>
-        <MudTd DataLabel="@Html.GetLabel(x => x.IsRequired)">@context.IsRequired</MudTd>
-        <MudTd DataLabel="@Html.GetLabel(x => x.IsRequired)">@context.Placeholder</MudTd>
+        <MudTd DataLabel="@Helper.GetLabel(x => x.Name)">@context.Name</MudTd>
+        <MudTd DataLabel="@Helper.GetLabel(x => x.IsRequired)">@context.IsRequired</MudTd>
+        <MudTd DataLabel="@Helper.GetLabel(x => x.IsRequired)">@context.Placeholder</MudTd>
         <MudTd>
             <MudButton
                 IconColor="Color.Error"
@@ -78,15 +78,15 @@
             </MudButton>
         </MudTd>
     </RowTemplate>
-    
+
     <PagerContent>
         <MudTablePager/>
     </PagerContent>
-    
+
     <LoadingContent>
         <MudText>Fetching data...</MudText>
     </LoadingContent>
-    
+
     <NoRecordsContent>
         <MudText>There are no records to display</MudText>
     </NoRecordsContent>
@@ -96,18 +96,18 @@
 
 @code
 {
-    private FieldRequestView _fieldRequest = new FieldRequestView();
+    private FieldRequestView _fieldRequest = new();
     private IList<FieldResponseView> fields = new List<FieldResponseView>();
     private bool _loading = true;
     private string _searchingString = "";
     private HashSet<FieldResponseView> _selected = new();
 
     private RenderFragment TableActions => @<FieldsTableActions SelectedItems="@_selected"></FieldsTableActions>;
-    
+
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        
+
         _loading = false;
     }
 
@@ -116,12 +116,12 @@
         Console.WriteLine("Fetching data . . .");
         fields = await Service.Get();
     }
-    
+
     private void NavigateTo(TableRowClickEventArgs<FieldResponseView> tableRowClick)
     {
         Navigation.NavigateTo(ExampleRoutes.GetEditPath(tableRowClick.Item.Id));
     }
-    
+
     private static bool FilterFunc(FieldResponseView element, string searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString))

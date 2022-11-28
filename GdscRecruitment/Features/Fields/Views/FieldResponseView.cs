@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using GdscRecruitment.Base;
 using MudBlazor;
 
 namespace GdscRecruitment.Features.Fields.Views;
 
-public class FieldResponseView
+public class FieldResponseView : ViewModel
 {
-    [Label("Id")][Required] public string Id { get; set; }
-    
-    [Label("Name")][Required] public string Name { get; set; }
-    
-    [Label("IsRequired")][Required][Range(typeof(bool), "true", "false")]
+    [Label("Name")] [Required] public string Name { get; set; }
+
+    [Label("IsRequired")]
+    [Required]
+    [Range(typeof(bool), "true", "false")]
     public bool IsRequired { get; set; }
-    
-    [Label("Placeholder")]public string? Placeholder { get; set; }
+
+    [Label("Placeholder")] public string? Placeholder { get; set; }
 }

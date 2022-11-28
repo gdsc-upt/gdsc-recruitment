@@ -1,12 +1,13 @@
+using System.ComponentModel;
 using MudBlazor;
 
 namespace GdscRecruitment.Base;
 
 public abstract class ViewModel
 {
-    public string Id { get; set; }
+    [Label("Identifier")] [ReadOnly(true)] public string Id { get; set; }
 
-    [Label("Created")] public DateTime Created { get; set; }
+    [Label("Created")] [ReadOnly(true)] public DateTime Created { get; set; }
 
-    public DateTime Updated { get; set; }
+    [Label("Updated")] [ReadOnly(true)] public DateTime Updated { get; set; }
 }

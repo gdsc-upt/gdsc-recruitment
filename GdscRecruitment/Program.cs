@@ -38,7 +38,7 @@ services.AddAutoMapper(typeof(MappingProfiles));
 services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 services.AddScoped<ExamplesService>();
 services.AddScoped<FieldsService>();
-services.AddScoped(typeof(Html<>));
+services.AddScoped(typeof(ViewModelHelper<>));
 services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 
 services.AddAuthentication().AddGoogle(options =>

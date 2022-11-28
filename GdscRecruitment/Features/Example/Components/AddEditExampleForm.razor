@@ -5,6 +5,7 @@
 @inject NavigationManager Navigation
 @inject IMapper Mapper
 @inject ExamplesService Service
+@inject ViewModelHelper<ExampleViewModel> Helper
 
 <EditForm Model="@_viewModel" OnValidSubmit="OnSubmit">
     <DataAnnotationsValidator/>
@@ -12,8 +13,26 @@
         <MudItem xs="12">
             <MudCard>
                 <MudCardContent>
+                    @if (IsEdit)
+                    {
+                        <MudTextField
+                            Disabled="@Helper.IsReadOnly(x => x.Id)"
+                            @bind-Value="_viewModel.Id"
+                            For="@(() => _viewModel.Id)"/>
+
+                        <MudTextField
+                            Disabled="@Helper.IsReadOnly(x => x.Created)"
+                            @bind-Value="_viewModel.Created"
+                            For="@(() => _viewModel.Created)"/>
+
+                        <MudTextField
+                            Disabled="@Helper.IsReadOnly(x => x.Updated)"
+                            @bind-Value="_viewModel.Updated"
+                            For="@(() => _viewModel.Updated)"/>
+                    }
+
                     <MudTextField
-                        HelperText="Max. 8 characters"
+                        HelperText="Max. 6 characters"
                         @bind-Value="_viewModel.Title"
                         For="@(() => _viewModel.Title)"/>
 

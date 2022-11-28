@@ -1,16 +1,18 @@
 ﻿@using GdscRecruitment.Features.Example
-<MudAppBar Elevation="1">
-    <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@ToggleDrawer"/>
-    <MudSpacer/>
-    <LoginDisplay/>
+<MudAppBar Elevation="1" Class="d-flex">
+    <div class="full-width"></div>
+    <div class="full-width d-flex justify-center">
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Class="d-flex flex-column width-auto">
+            <MudText Typo="Typo.h6" Color="Color.Success" Class="text-center">Recruitment App</MudText>
+            <MudText Typo="Typo.body2" Class="mud-text-secondary" Color="Color.Secondary">Build good things together!</MudText>
+        </MudNavLink>
+    </div>
+    <div class="full-width d-flex justify-end">
+        <LoginDisplay/>
+    </div>
 </MudAppBar>
 
-<MudDrawer Anchor="Anchor.Start" ClipMode="DrawerClipMode.Never" @bind-Open="@_open" Elevation="1" Variant="@DrawerVariant.Responsive">
-    <MudDrawerHeader Class="d-flex flex-column">
-        <MudText Typo="Typo.h6" Color="Color.Success">Recruitment App</MudText>
-        <MudText Typo="Typo.body2" Class="mud-text-secondary" Color="Color.Secondary">Build good things together!</MudText>
-    </MudDrawerHeader>
-
+<MudDrawer @onmouseenter="OpenDrawer" @onmouseleave="CloseDrawer" Anchor="Anchor.Start" ClipMode="DrawerClipMode.Always" @bind-Open="@_open" Elevation="1" Variant="@DrawerVariant.Mini">
     <MudNavMenu Color="Color.Primary" Margin="Margin.Dense" Rounded="true" Class="mud-width-full" Bordered="true">
         <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="fas fa-house" IconColor="Color.Success">Home</MudNavLink>
         <MudNavLink Href="/fields" Icon="fas fa-server" IconColor="Color.Primary">Fields</MudNavLink>
@@ -25,11 +27,16 @@
 </MudDrawer>
 
 @code {
-    private bool _open = true;
+    private bool _open = false;
 
-    void ToggleDrawer()
+    private void OpenDrawer()
     {
-        _open = !_open;
+        _open = true;
+    }
+
+    private void CloseDrawer()
+    {
+        _open = false;
     }
 
 }

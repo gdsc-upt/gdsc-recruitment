@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
 using System.Reflection;
 using GdscRecruitment.Utilities.Attributes;
 using MudBlazor;
@@ -29,33 +28,5 @@ public static class EnumExtensions
     public static string GetDescription(this Enum enumValue)
     {
         return enumValue.GetAttributeOfType<DisplayAttribute>()?.Description ?? string.Empty;
-    }
-}
-
-public class Html<T>
-{
-    public string GetLabel(Expression<Func<T, object>> property)
-    {
-        var member = GetMemberExpression(property);
-        if (member is null)
-        {
-            return string.Empty;
-        }
-
-        var display = member.Member.GetCustomAttribute<LabelAttribute>();
-        return display?.Name ?? member.Member.Name;
-    }
-
-    private static MemberExpression? GetMemberExpression(Expression<Func<T, object>> expr)
-    {
-        switch (expr.Body.NodeType)
-        {
-            case ExpressionType.Convert:
-            case ExpressionType.ConvertChecked:
-                var ue = expr.Body as UnaryExpression;
-                return ue?.Operand as MemberExpression;
-            default:
-                return expr.Body as MemberExpression;
-        }
     }
 }
