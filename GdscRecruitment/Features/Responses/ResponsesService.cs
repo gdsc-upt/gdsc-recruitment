@@ -1,5 +1,5 @@
 using AutoMapper;
-using GdscRecruitment.Data;
+using GdscRecruitment.Common.Repository;
 using GdscRecruitment.Features.Responses.Models;
 using GdscRecruitment.Features.Responses.Views;
 
@@ -7,8 +7,8 @@ namespace GdscRecruitment.Features.Responses;
 
 public class ResponsesService
 {
-    private readonly IRepository<ResponseModel> _repository;
     private readonly IMapper _mapper;
+    private readonly IRepository<ResponseModel> _repository;
 
     public ResponsesService(IRepository<ResponseModel> repository, IMapper mapper)
     {
@@ -20,10 +20,7 @@ public class ResponsesService
     {
         var list = new List<ResponseResponseView>();
         var all = await _repository.GetAsync();
-        foreach (var response in all)
-        {
-            list.Add(_mapper.Map<ResponseResponseView>(response));
-        }
+        foreach (var response in all) list.Add(_mapper.Map<ResponseResponseView>(response));
 
         return list;
     }

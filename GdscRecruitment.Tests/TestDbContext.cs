@@ -1,4 +1,4 @@
-using GdscRecruitment.Base.Models;
+using GdscRecruitment.Common.Features.Base;
 using GdscRecruitment.Data;
 using Microsoft.EntityFrameworkCore;
 

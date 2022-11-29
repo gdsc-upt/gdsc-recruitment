@@ -1,7 +1,6 @@
-@using GdscRecruitment.Features.Fields.Views
+@using GdscRecruitment.Common.Features.Examples.Models
 @using GdscRecruitment.Common.Utilities
-@using GdscRecruitment.Common.Shared.Components
-@inherits OwningComponentBase<FieldsService>
+@inherits OwningComponentBase<GdscRecruitment.Common.Features.Examples.ExamplesService>
 
 <MudPaper Class="pa-4 mt-4 d-flex">
     <AuthorizeView Roles="@Roles.Admin">
@@ -12,12 +11,12 @@
                 Icon="fa-dumpster">
             </ErrorButton>
 
-            <MudSpacer/>
+            <MudSpacer></MudSpacer>
 
             <PrimaryButton
                 Text="Open Add page"
-                Href="/fields/add"
-                Tooltip="Add new field">
+                Href="@ExampleAdminRoutes.AddExample"
+                Tooltip="Add new example">
             </PrimaryButton>
         </Authorized>
 
@@ -28,7 +27,7 @@
                 Icon="fa-dumpster">
             </ErrorButton>
 
-            <MudSpacer/>
+            <MudSpacer></MudSpacer>
 
             <PrimaryButton
                 Text="Open add page"
@@ -42,6 +41,6 @@
 @code {
 
     [Parameter]
-    public HashSet<FieldResponseView> SelectedItems { get; set; } = new();
+    public HashSet<ExampleViewModel> SelectedItems { get; set; } = new();
 
 }

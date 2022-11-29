@@ -1,7 +1,8 @@
 using System.Security.Claims;
 using System.Text;
 using System.Text.Encodings.Web;
-using GdscRecruitment.Features.Users.Models;
+using GdscRecruitment.Common.Features.Users.Models;
+using GdscRecruitment.Common.Utilities;
 using GdscRecruitment.Utilities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

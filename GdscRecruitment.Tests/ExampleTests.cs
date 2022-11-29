@@ -1,7 +1,7 @@
 using Bogus;
-using GdscRecruitment.Data;
-using GdscRecruitment.Features.Example;
-using GdscRecruitment.Features.Example.Models;
+using GdscRecruitment.Common.Features.Examples;
+using GdscRecruitment.Common.Features.Examples.Models;
+using GdscRecruitment.Common.Repository;
 using Xunit;
 using Xunit.Abstractions;
 

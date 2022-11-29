@@ -1,10 +1,10 @@
 @page "/fields"
 @inject NavigationManager Navigation
 @using GdscRecruitment.Features.Fields.Views
-@using GdscRecruitment.Utilities
-@using GdscRecruitment.Features.Fields.Models
-@using GdscRecruitment.Features.Example
+@using GdscRecruitment.Common.Utilities
 @using GdscRecruitment.Features.Fields.Components
+@using GdscRecruitment.Features.Fields.Models
+@using GdscRecruitment.Utilities
 @inherits OwningComponentBase<FieldsService>
 @inject ViewModelHelper<FieldResponseView> Helper
 
@@ -119,7 +119,7 @@
 
     private void NavigateTo(TableRowClickEventArgs<FieldResponseView> tableRowClick)
     {
-        Navigation.NavigateTo(ExampleRoutes.GetEditPath(tableRowClick.Item.Id));
+        Navigation.NavigateTo("/fields/" + tableRowClick.Item.Id);
     }
 
     private static bool FilterFunc(FieldResponseView element, string searchString)

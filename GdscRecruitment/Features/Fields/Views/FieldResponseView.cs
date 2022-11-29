@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using GdscRecruitment.Base;
+using GdscRecruitment.Common.Features.Base;
 using MudBlazor;
 
 namespace GdscRecruitment.Features.Fields.Views;

@@ -1,5 +1,5 @@
 using AutoMapper;
-using GdscRecruitment.Features.Example.Models;
+using GdscRecruitment.Common.Features.Examples.Models;
 using GdscRecruitment.Features.Fields.Models;
 using GdscRecruitment.Features.Fields.Views;
 
