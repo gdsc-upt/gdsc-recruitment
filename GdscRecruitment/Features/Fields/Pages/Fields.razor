@@ -63,6 +63,13 @@
                 @Helper.GetLabel(x => x.Placeholder)
             </MudTableSortLabel>
         </MudTh>
+        <MudTh>
+            <MudTableSortLabel
+                InitialDirection="SortDirection.Ascending"
+                SortBy="new Func<FieldModel, object>(x => x.FieldType)">
+                @Helper.GetLabel(x => x.FieldType)
+            </MudTableSortLabel>
+        </MudTh>
         <MudTh>Actions</MudTh>
     </HeaderContent>
 
@@ -70,6 +77,11 @@
         <MudTd DataLabel="@Helper.GetLabel(x => x.Name)">@context.Name</MudTd>
         <MudTd DataLabel="@Helper.GetLabel(x => x.IsRequired)">@context.IsRequired</MudTd>
         <MudTd DataLabel="@Helper.GetLabel(x => x.IsRequired)">@context.Placeholder</MudTd>
+        <MudTd DataLabel="@Helper.GetLabel(x => x.FieldType)">
+            <MudTooltip Color="@context.FieldType.GetColor()" Arrow="true">
+                <MudText Color="@context.FieldType.GetColor()">@context.FieldType.GetName()</MudText>
+            </MudTooltip>
+        </MudTd>
         <MudTd>
             <MudButton
                 IconColor="Color.Error"
@@ -96,7 +108,6 @@
 
 @code
 {
-    private FieldRequestView _fieldRequest = new();
     private IList<FieldResponseView> fields = new List<FieldResponseView>();
     private bool _loading = true;
     private string _searchingString = "";
@@ -107,8 +118,9 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
         _loading = false;
+        Console.WriteLine("Fetching data . . .");
+        fields = await Service.Get();
     }
 
     private async Task FetchData()
@@ -126,7 +138,7 @@
     {
         if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        return element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) || element.Placeholder.Contains(searchString, StringComparison.OrdinalIgnoreCase) || $"{element.Name} {element.Placeholder} {element.Id}".Contains(searchString, StringComparison.OrdinalIgnoreCase);
+        return element.Placeholder != null && (element.Name.Contains(searchString, StringComparison.OrdinalIgnoreCase) || element.Placeholder.Contains(searchString, StringComparison.OrdinalIgnoreCase) || $"{element.Name} {element.Placeholder} {element.Id}".Contains(searchString, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task Delete(FieldResponseView context)

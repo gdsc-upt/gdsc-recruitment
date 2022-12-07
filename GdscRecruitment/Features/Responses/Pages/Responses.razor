@@ -1,25 +1,24 @@
 @page "/respond"
 @using GdscRecruitment.Features.Fields
 @using GdscRecruitment.Features.Responses
-@using AutoMapper
 @using GdscRecruitment.Features.Fields.Views
-@using GdscRecruitment.Features.Responses.Models
 @using GdscRecruitment.Features.Responses.Views
+@using Microsoft.AspNetCore.Identity
+@using GdscRecruitment.Common.Features.Users.Models
 @inherits OwningComponentBase<ResponsesService>
 @inject FieldsService FieldsService
-@inject NavigationManager Navigation
-@inject IMapper Mapper
+@inject UserManager<User> UserManager
+@inject NavigationManager Navigator
 
 <PageTitle>GDSC UPT Recruitment Form</PageTitle>
 
 <MudGrid>
     <MudItem xs="12" sm="7">
         <MudPaper Class="pa-4">
-            <MudForm
-                @ref="form"
+            <EditForm
                 @bind-isValid="@success"
-                @bind-Errors="@errors"
-                Model="@_request">
+                Model="@_responses"
+                OnValidSubmit="Submit">
                 @foreach (var question in _questions)
                 {
                     <MudTextField
@@ -28,36 +27,67 @@
                         Required="@question.IsRequired"
                         Placeholder="@question.Placeholder"
                         RequiredError="This field cannot be empty!"
-                        @bind-Value="@_request.Value"
-                        For="(() => _request.Value)"/>
+                        @bind-Value="@_responses[question.Id].Value"
+                        For="@(() => _responses[question.Id].Value)"/>
                 }
                 <div>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="@(!success)" Class="m1-auto">Submit</MudButton>
+                    <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(success)" Class="m1-auto">Submit</MudButton>
                 </div>
-            </MudForm>
+            </EditForm>
         </MudPaper>
     </MudItem>
 </MudGrid>
 
-
 @code {
     private bool success = false;
 
-    private MudForm form = new();
-
-    private string[] errors = { };
-    
-    private ResponseRequestView _request = new();
+    private Dictionary<string, ResponseRequestView> _responses = new Dictionary<string, ResponseRequestView>();
 
     private IList<FieldResponseView> _questions = new List<FieldResponseView>();
 
-    private IList<ResponseResponseView> _responses = new List<ResponseResponseView>();
+    private IList<ResponseResponseView> _responseModels = new List<ResponseResponseView>();
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    private User currentUser;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
+        var authState = await authenticationStateTask;
+
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            currentUser = await UserManager.GetUserAsync(authState.User);
+        }
+        else
+        {
+            Navigator.NavigateTo("/");
+        }
+
         _questions = await FieldsService.Get();
+
+        foreach (var question in _questions)
+        {
+            _responses[question.Id] = new ResponseRequestView
+            {
+                FieldId = question.Id,
+                UserId = currentUser.Id,
+            };
+        }
+    }
+
+    private async Task Submit()
+    {
+        success = true;
+        foreach ( (var key, var response) in _responses)
+        {
+            await Service.Add(response);
+        }
+
+        _responseModels = await Service.Get();
     }
 
 }

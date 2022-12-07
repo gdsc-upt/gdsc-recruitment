@@ -1,6 +1,8 @@
 @using GdscRecruitment.Features.Fields.Models
 @using GdscRecruitment.Features.Fields.Views
 @using AutoMapper
+@using GdscRecruitment.Common.Utilities
+@using GdscRecruitment.Utilities
 @inject IMapper Mapper
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
@@ -26,6 +28,22 @@
                         Color="Color.Secondary"
                         Disabled="false"
                         For="@(() => _viewModel.IsRequired)"/>
+                    <div class="d-flex">
+                        <MudRadioGroup
+                            For="@(() => _viewModel.FieldType)"
+                            @bind-SelectedOption="_viewModel.FieldType"
+                            T="FieldTypeEnum"
+                            Required="true"
+                            RequiredError="Filed Type is required!">
+                            @foreach (FieldTypeEnum type in Enum.GetValues(typeof(FieldTypeEnum)))
+                            {
+                                var color = type.GetColor();
+                                <MudTooltip Color="color" Arrow="true">
+                                    <MudRadio Color="color" Option="type">@type.GetName()</MudRadio>
+                                </MudTooltip>
+                            }
+                        </MudRadioGroup>
+                    </div>
                 </MudCardContent>
                 
                 <MudCardActions>

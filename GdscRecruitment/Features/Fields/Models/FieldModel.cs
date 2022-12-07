@@ -9,4 +9,6 @@ public class FieldModel : Model
     public bool IsRequired { get; set; }
 
     public string? Placeholder { get; set; }
+    
+    public FieldTypeEnum FieldType { get; set; }
 }

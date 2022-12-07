@@ -6,6 +6,7 @@ using GdscRecruitment.Common.Features.Users.Models;
 using GdscRecruitment.Common.Utilities;
 using GdscRecruitment.Data;
 using GdscRecruitment.Features.Fields;
+using GdscRecruitment.Features.Responses;
 using GdscRecruitment.Utilities;
 using GdscRecruitment.Utilities.Mappers;
 using Microsoft.AspNetCore.Authentication;
@@ -41,7 +42,10 @@ services.AddGdscRecruitmentCommon();
 services.AddScoped<DbContext, ApplicationDbContext>();
 services.AddScoped<ExamplesService>();
 services.AddScoped<FieldsService>();
+services.AddScoped<ResponsesService>();
+services.AddScoped(typeof(ViewModelHelper<>));
 services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
+services.AddTransient<UserManager<User>>();
 
 services.AddAuthentication().AddGoogle(options =>
 {
