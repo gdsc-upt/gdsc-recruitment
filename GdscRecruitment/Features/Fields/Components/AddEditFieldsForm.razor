@@ -39,12 +39,21 @@
                             {
                                 var color = type.GetColor();
                                 <MudTooltip Color="color" Arrow="true">
-                                    <MudRadio Color="color" Option="type">@type.GetName()</MudRadio>
+                                    <MudRadio Color="color" Option="type" @onclick="CheckOptions">@type.GetName()</MudRadio>
                                 </MudTooltip>
                             }
                         </MudRadioGroup>
                     </div>
                 </MudCardContent>
+                
+                @if (_hasOptions)
+                {
+                    <MudCard>
+                        <MudCardContent>
+                            Text
+                        </MudCardContent>
+                    </MudCard>
+                }
                 
                 <MudCardActions>
                     <MudButton
@@ -83,6 +92,8 @@
 @code {
     [Parameter]
     public FieldModel? Model { get; set; }
+
+    private bool _hasOptions = false;
 
     private FieldRequestView _viewModel = new ();
     bool isEdit => Model is not null;
@@ -146,5 +157,13 @@
 
         await OnValidSubmit.InvokeAsync();
         _viewModel = new FieldRequestView();
+    }
+
+    private void CheckOptions()
+    {
+        if (_viewModel.FieldType == FieldTypeEnum.Dropdown || _viewModel.FieldType == FieldTypeEnum.Radio)
+        {
+            _hasOptions = true;
+        }
     }
 }
