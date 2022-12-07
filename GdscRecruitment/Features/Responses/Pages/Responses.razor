@@ -3,11 +3,9 @@
 @using GdscRecruitment.Features.Responses
 @using GdscRecruitment.Features.Fields.Views
 @using GdscRecruitment.Features.Responses.Views
-@using Microsoft.AspNetCore.Identity
 @using GdscRecruitment.Common.Features.Users.Models
-@inherits OwningComponentBase<ResponsesService>
+@inherits GdscRecruitment.Common.Shared.BaseComponent<ResponsesService>
 @inject FieldsService FieldsService
-@inject UserManager<User> UserManager
 @inject NavigationManager Navigator
 
 <PageTitle>GDSC UPT Recruitment Form</PageTitle>
@@ -47,25 +45,9 @@
 
     private IList<ResponseResponseView> _responseModels = new List<ResponseResponseView>();
 
-    [CascadingParameter]
-    private Task<AuthenticationState> authenticationStateTask { get; set; }
-
-    private User currentUser;
-
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        var authState = await authenticationStateTask;
-
-        if (authState.User.Identity.IsAuthenticated)
-        {
-            currentUser = await UserManager.GetUserAsync(authState.User);
-        }
-        else
-        {
-            Navigator.NavigateTo("/");
-        }
 
         _questions = await FieldsService.Get();
 
@@ -74,7 +56,7 @@
             _responses[question.Id] = new ResponseRequestView
             {
                 FieldId = question.Id,
-                UserId = currentUser.Id,
+                UserId = User!.Id,
             };
         }
     }

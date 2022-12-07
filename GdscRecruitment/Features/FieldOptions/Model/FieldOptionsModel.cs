@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+using MudBlazor;
+
 namespace GdscRecruitment.Features.FieldOptions.Model;
 
 public class FieldOptionsModel : Common.Features.Base.Model
 {
-    public string FieldId { get; set; }
+    [Required]public string FieldId { get; set; }
     
-    public string Label { get; set; }
+    [Label("Option label")]public string Label { get; set; }
 }

@@ -2,10 +2,14 @@
 @using GdscRecruitment.Features.Fields.Views
 @using AutoMapper
 @using GdscRecruitment.Common.Utilities
+@using GdscRecruitment.Features.FieldOptions
+@using GdscRecruitment.Features.FieldOptions.Model
 @using GdscRecruitment.Utilities
+@using System.Runtime.CompilerServices
 @inject IMapper Mapper
 @inject ISnackbar Snackbar
 @inject NavigationManager Navigation
+@inject FieldOptionsService OptionsService
 @inherits OwningComponentBase<FieldsService>
 
 <EditForm Model="@_viewModel" OnValidSubmit="OnSubmit">
@@ -31,7 +35,8 @@
                     <div class="d-flex">
                         <MudRadioGroup
                             For="@(() => _viewModel.FieldType)"
-                            @bind-SelectedOption="_viewModel.FieldType"
+                            SelectedOption="_viewModel.FieldType"
+                            SelectedOptionChanged="CheckOptions"
                             T="FieldTypeEnum"
                             Required="true"
                             RequiredError="Filed Type is required!">
@@ -39,22 +44,36 @@
                             {
                                 var color = type.GetColor();
                                 <MudTooltip Color="color" Arrow="true">
-                                    <MudRadio Color="color" Option="type" @onclick="CheckOptions">@type.GetName()</MudRadio>
+                                    <MudRadio Color="color" Option="type">@type.GetName()</MudRadio>
                                 </MudTooltip>
                             }
                         </MudRadioGroup>
                     </div>
+                    @if (_hasOptions)
+                    {
+                        <div class="d-flex flex-column">
+                            <MudCardContent>
+                                @foreach (var option in options)
+                                {
+                                    <MudTextField
+                                        Class="mt-3"
+                                        HelperText="Input Option Name:"
+                                        @bind-Value="@options[index - 1].Label"
+                                        For="@(() => options[index - 1].Label)"/>
+                                }
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton
+                                    Variant="Variant.Outlined"
+                                    Color="Color.Info"
+                                    StartIcon="@Icons.Material.Filled.Add"
+                                    OnClick="AddOption">
+                                    Add a new option
+                                </MudButton>
+                            </MudCardActions>
+                        </div>
+                    }
                 </MudCardContent>
-                
-                @if (_hasOptions)
-                {
-                    <MudCard>
-                        <MudCardContent>
-                            Text
-                        </MudCardContent>
-                    </MudCard>
-                }
-                
                 <MudCardActions>
                     <MudButton
                         Variant="Variant.Outlined"
@@ -93,6 +112,9 @@
     [Parameter]
     public FieldModel? Model { get; set; }
 
+    private IList<FieldOptionsModel> options = new List<FieldOptionsModel>();
+    private int index = 0;
+
     private bool _hasOptions = false;
 
     private FieldRequestView _viewModel = new ();
@@ -114,7 +136,7 @@
             Snackbar.Add("Something went wrong, there is an existing Model", Severity.Error);
             return;
         }
-
+        
         await Service.Add(_viewModel);
         StateHasChanged();
         Snackbar.Add("Field added!", Severity.Success);
@@ -159,11 +181,23 @@
         _viewModel = new FieldRequestView();
     }
 
-    private void CheckOptions()
+    private void CheckOptions(FieldTypeEnum option)
     {
+        _viewModel.FieldType = option;
         if (_viewModel.FieldType == FieldTypeEnum.Dropdown || _viewModel.FieldType == FieldTypeEnum.Radio)
         {
             _hasOptions = true;
         }
+        else
+        {
+            _hasOptions = false;
+        }
+    }
+
+    private void AddOption()
+    {
+        index++;
+        var newOption = new FieldOptionsModel();
+        options.Add(newOption);
     }
 }
