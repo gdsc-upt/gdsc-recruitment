@@ -55,11 +55,18 @@
                             <MudCardContent>
                                 @foreach (var option in options)
                                 {
-                                    <MudTextField
-                                        Class="mt-3"
-                                        HelperText="Input Option Name:"
-                                        @bind-Value="@options[index - 1].Label"
-                                        For="@(() => options[index - 1].Label)"/>
+                                    <div class="d-flex">
+                                        <MudButton
+                                            IconColor="Color.Error"
+                                            StartIcon="fa-solid fa-trash"
+                                            OnClick="() => Delete(option)">
+                                            </MudButton>
+                                        <MudTextField
+                                            Class="mt-3"
+                                            HelperText="Input Option Name:"
+                                            @bind-Value="option.Label"
+                                            For="@(() => option.Label)"/>
+                                    </div>
                                 }
                             </MudCardContent>
                             <MudCardActions>
@@ -113,7 +120,6 @@
     public FieldModel? Model { get; set; }
 
     private IList<FieldOptionsModel> options = new List<FieldOptionsModel>();
-    private int index = 0;
 
     private bool _hasOptions = false;
 
@@ -136,8 +142,8 @@
             Snackbar.Add("Something went wrong, there is an existing Model", Severity.Error);
             return;
         }
-        
-        await Service.Add(_viewModel);
+
+        Model = await Service.Add(_viewModel);
         StateHasChanged();
         Snackbar.Add("Field added!", Severity.Success);
         Navigation.NavigateTo("/fields");
@@ -176,6 +182,12 @@
         {
             await AddField();
         }
+        
+        foreach (var option in options)
+        {
+            option.FieldId = Model.Id;
+            await OptionsService.Add(option);
+        }
 
         await OnValidSubmit.InvokeAsync();
         _viewModel = new FieldRequestView();
@@ -196,8 +208,12 @@
 
     private void AddOption()
     {
-        index++;
         var newOption = new FieldOptionsModel();
         options.Add(newOption);
+    }
+
+    private void Delete(FieldOptionsModel context)
+    {
+        options.Remove(context);
     }
 }

@@ -3,10 +3,13 @@
 @using GdscRecruitment.Features.Responses
 @using GdscRecruitment.Features.Fields.Views
 @using GdscRecruitment.Features.Responses.Views
-@using GdscRecruitment.Common.Features.Users.Models
+@using GdscRecruitment.Features.Fields.Models
+@using GdscRecruitment.Features.FieldOptions
+@using GdscRecruitment.Features.FieldOptions.Model
 @inherits GdscRecruitment.Common.Shared.BaseComponent<ResponsesService>
 @inject FieldsService FieldsService
-@inject NavigationManager Navigator
+@inject FieldOptionsService OptionsService
+@inject NavigationManager Navigation
 
 <PageTitle>GDSC UPT Recruitment Form</PageTitle>
 
@@ -19,14 +22,66 @@
                 OnValidSubmit="Submit">
                 @foreach (var question in _questions)
                 {
-                    <MudTextField
-                        T="string"
-                        Label="@question.Name"
-                        Required="@question.IsRequired"
-                        Placeholder="@question.Placeholder"
-                        RequiredError="This field cannot be empty!"
-                        @bind-Value="@_responses[question.Id].Value"
-                        For="@(() => _responses[question.Id].Value)"/>
+                    @switch (question.FieldType)
+                    {
+                        case FieldTypeEnum.Text:
+                        {
+                            <MudTextField
+                                T="string"
+                                Label="@question.Name"
+                                Required="@question.IsRequired"
+                                Placeholder="@question.Placeholder"
+                                RequiredError="This field cannot be empty!"
+                                @bind-Value="@_responses[question.Id].Value"
+                                For="@(() => _responses[question.Id].Value)"/>
+                            break;
+                        }
+                        case FieldTypeEnum.Checkbox:
+                        {
+                            <MudCheckBox
+                                Label="@question.Name"
+                                Required="@question.IsRequired"
+                                RequiredError="This field cannot be empty!"
+                                @bind-Checked="@_responses[question.Id].Value"
+                                Color="Color.Secondary"/>
+                            break;
+                        }
+                        case FieldTypeEnum.Dropdown:
+                        {
+                            <MudSelect @bind-Value="@_responses[question.Id].Value" Variant="Variant.Text" Margin="Margin.Dense" Label="@question.Name">
+                                @foreach (var option in options)
+                                {
+                                    if (option.FieldId == question.Id)
+                                    {
+                                        <MudSelectItem T="string" Value="option.Label"/>
+                                    }
+                                }
+                            </MudSelect>
+                            break;
+                        }
+                        case FieldTypeEnum.Radio:
+                        {
+                            <div class="d-flex">
+                                <MudRadioGroup
+                                    For="@(() => _responses[question.Id].Value)"
+                                    @bind-SelectedOption="_responses[question.Id].Value"
+                                    T="string"
+                                    Required="question.IsRequired"
+                                    RequiredError="This field cannot be empty!">
+                                    @foreach (var option in options)
+                                    {
+                                        if (option.FieldId == question.Id)
+                                        {
+                                            <MudTooltip Color="Color.Secondary" Arrow="true">
+                                                <MudRadio Color="Color.Secondary" Option="option.Label">@option.Label</MudRadio>
+                                            </MudTooltip>
+                                        }
+                                    }
+                                </MudRadioGroup>
+                            </div>
+                            break;
+                        }
+                    }
                 }
                 <div>
                     <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Disabled="@(success)" Class="m1-auto">Submit</MudButton>
@@ -38,18 +93,20 @@
 
 @code {
     private bool success = false;
+    
+    private List<FieldOptionsModel> options;
 
-    private Dictionary<string, ResponseRequestView> _responses = new Dictionary<string, ResponseRequestView>();
+    private Dictionary<string, ResponseRequestView> _responses = new ();
 
     private IList<FieldResponseView> _questions = new List<FieldResponseView>();
-
-    private IList<ResponseResponseView> _responseModels = new List<ResponseResponseView>();
-
+    
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         _questions = await FieldsService.Get();
+
+        options = await OptionsService.Get();
 
         foreach (var question in _questions)
         {
@@ -68,8 +125,8 @@
         {
             await Service.Add(response);
         }
-
-        _responseModels = await Service.Get();
+        
+        Navigation.NavigateTo("/");
     }
 
 }
