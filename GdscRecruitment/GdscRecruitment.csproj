@@ -29,4 +29,8 @@
         <ProjectReference Include="..\GdscRecruitment.Common\GdscRecruitment.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Features\Fields\Interviews\Pages\InterviewsTable.razor" />
+    </ItemGroup>
+
 </Project>

@@ -30,7 +30,7 @@ public class FieldsService
 
     public async Task<FieldModel> Get(string id)
     {
-        var field = await _repository.DbSet.FirstOrDefaultAsync(entity => entity.Id == id);
+        var field = await _repository.GetAsync(id);
         if (field is null)
         {
             return null;
@@ -47,15 +47,9 @@ public class FieldsService
     }
 
     [Authorize(Roles = Roles.Admin)]
-    public async Task<FieldResponseView> Delete(string id)
+    public async Task<FieldModel?> Delete(string id)
     {
-        var entity = await _repository.DeleteAsync(id);
-        if (entity is null)
-        {
-            return null;
-        }
-
-        return _mapper.Map<FieldResponseView>(entity);
+        return await _repository.DeleteAsync(id);
     }
 
     [Authorize(Roles = Roles.Admin)]
