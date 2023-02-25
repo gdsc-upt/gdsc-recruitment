@@ -6,6 +6,7 @@
 @using GdscRecruitment.Features.Fields.Models
 @using GdscRecruitment.Features.FieldOptions
 @using GdscRecruitment.Features.FieldOptions.Model
+@using System.Reflection.Emit
 @inherits GdscRecruitment.Common.Shared.BaseComponent<ResponsesService>
 @inject FieldsService FieldsService
 @inject FieldOptionsService OptionsService
@@ -61,23 +62,27 @@
                         }
                         case FieldTypeEnum.Radio:
                         {
-                            <div class="d-flex">
-                                <MudRadioGroup
-                                    For="@(() => _responses[question.Id].Value)"
-                                    @bind-SelectedOption="_responses[question.Id].Value"
-                                    T="string"
-                                    Required="question.IsRequired"
-                                    RequiredError="This field cannot be empty!">
-                                    @foreach (var option in options)
-                                    {
-                                        if (option.FieldId == question.Id)
+                            <div class="d-flex flex-column">
+                                <br>
+                                @question.Name
+                                <div class="d-flex">
+                                    <MudRadioGroup
+                                        For="@(() => _responses[question.Id].Value)"
+                                        @bind-SelectedOption="_responses[question.Id].Value"
+                                        T="string"
+                                        Required="question.IsRequired"
+                                        RequiredError="This field cannot be empty!">
+                                        @foreach (var option in options)
                                         {
-                                            <MudTooltip Color="Color.Secondary" Arrow="true">
-                                                <MudRadio Color="Color.Secondary" Option="option.Label">@option.Label</MudRadio>
-                                            </MudTooltip>
+                                            if (option.FieldId == question.Id)
+                                            {
+                                                <MudTooltip Color="Color.Secondary" Arrow="true">
+                                                    <MudRadio Color="Color.Secondary" Option="option.Label">@option.Label</MudRadio>
+                                                </MudTooltip>
+                                            }
                                         }
-                                    }
-                                </MudRadioGroup>
+                                    </MudRadioGroup>
+                                </div>
                             </div>
                             break;
                         }
