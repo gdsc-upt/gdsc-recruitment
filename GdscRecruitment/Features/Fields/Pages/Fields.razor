@@ -131,7 +131,7 @@
 
     private void NavigateTo(TableRowClickEventArgs<FieldResponseView> tableRowClick)
     {
-        Navigation.NavigateTo("/fields/" + tableRowClick.Item.Id);
+        Navigation.NavigateTo(AdminRoutes.GetEditPath(tableRowClick.Item.Id));
     }
 
     private static bool FilterFunc(FieldResponseView element, string searchString)
