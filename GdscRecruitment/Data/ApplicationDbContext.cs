@@ -1,9 +1,9 @@
 ﻿using GdscRecruitment.Common.Features.Examples.Models;
+using GdscRecruitment.Common.Features.FieldOptions.Model;
+using GdscRecruitment.Common.Features.Fields.Models;
+using GdscRecruitment.Common.Features.Responses.Models;
+using GdscRecruitment.Common.Features.Teams.Models;
 using GdscRecruitment.Common.Features.Users.Models;
-using GdscRecruitment.Features.FieldOptions.Model;
-using GdscRecruitment.Features.Fields.Models;
-using GdscRecruitment.Features.Responses.Models;
-using GdscRecruitment.Features.Teams.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
