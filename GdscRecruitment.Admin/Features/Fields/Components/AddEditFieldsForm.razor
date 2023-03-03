@@ -1,0 +1,217 @@
+@using AutoMapper
+@using GdscRecruitment.Common.Features.FieldOptions
+@using GdscRecruitment.Common.Features.FieldOptions.Model
+@using GdscRecruitment.Common.Features.Fields.Models
+@using GdscRecruitment.Common.Features.Fields.Views
+@using GdscRecruitment.Common.Utilities
+@inject IMapper Mapper
+@inject ISnackbar Snackbar
+@inject NavigationManager Navigation
+@inject FieldOptionsService OptionsService
+@inherits OwningComponentBase<GdscRecruitment.Common.Features.Fields.FieldsService>
+
+<EditForm Model="@_viewModel" OnValidSubmit="OnSubmit">
+    <DataAnnotationsValidator/>
+    <MudGrid>
+        <MudItem xs="12">
+            <MudCard>
+                <MudCardContent>
+                    <MudTextField
+                        HelperText="Input Filed Name"
+                        @bind-Value="_viewModel.Name"
+                        For="@(() => _viewModel.Name)"/>
+                    <MudTextField
+                        Class="mt-3"
+                        HelperText="Input Field Placeholder"
+                        @bind-Value="_viewModel.Placeholder"
+                        For="@(() => _viewModel.Placeholder)"/>
+                    <MudCheckBox
+                        @bind-Checked="_viewModel.IsRequired"
+                        Color="Color.Secondary"
+                        Disabled="false"
+                        For="@(() => _viewModel.IsRequired)"/>
+                    <div class="d-flex">
+                        <MudRadioGroup
+                            For="@(() => _viewModel.FieldType)"
+                            SelectedOption="_viewModel.FieldType"
+                            SelectedOptionChanged="CheckOptions"
+                            T="FieldTypeEnum"
+                            Required="true"
+                            RequiredError="Filed Type is required!">
+                            @foreach (FieldTypeEnum type in Enum.GetValues(typeof(FieldTypeEnum)))
+                            {
+                                var color = type.GetColor();
+                                <MudTooltip Color="color" Arrow="true">
+                                    <MudRadio Color="color" Option="type">@type.GetName()</MudRadio>
+                                </MudTooltip>
+                            }
+                        </MudRadioGroup>
+                    </div>
+                    @if (_hasOptions)
+                    {
+                        <div class="d-flex flex-column">
+                            <MudCardContent>
+                                @foreach (var option in options)
+                                {
+                                    <div class="d-flex">
+                                        <MudButton
+                                            IconColor="Color.Error"
+                                            StartIcon="fa-solid fa-trash"
+                                            OnClick="() => Delete(option)">
+                                            </MudButton>
+                                        <MudTextField
+                                            Class="mt-3"
+                                            HelperText="Input Option Name:"
+                                            @bind-Value="option.Label"
+                                            For="@(() => option.Label)"/>
+                                    </div>
+                                }
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton
+                                    Variant="Variant.Outlined"
+                                    Color="Color.Info"
+                                    StartIcon="@Icons.Material.Filled.Add"
+                                    OnClick="AddOption">
+                                    Add a new option
+                                </MudButton>
+                            </MudCardActions>
+                        </div>
+                    }
+                </MudCardContent>
+                <MudCardActions>
+                    <MudButton
+                        Variant="Variant.Outlined"
+                        Color="Color.Primary"
+                        StartIcon="fa-solid fa-circle-left"
+                        IconColor="Color.Primary"
+                        Class="ml-auto"
+                        OnClick="GoBack">
+                        Back
+                    </MudButton>
+                    
+                    <MudSpacer/>
+                    
+                    <MudButton
+                        ButtonType="ButtonType.Submit"
+                        Variant="Variant.Filled"
+                        StartIcon="fa-solid fa-circle-check"
+                        IconColor="Color.Surface"
+                        Color="Color.Success"
+                        Class="ml-auto">
+                        @(isEdit ? "Update" : "Add")
+                    </MudButton>
+                </MudCardActions>
+            </MudCard>
+        </MudItem>
+        
+        <MudItem xs="12">
+            <MudText Typo="Typo.body2" Align="Align.Center">
+                Fill out the form correctly to see the success message.
+            </MudText>
+        </MudItem>
+    </MudGrid>
+</EditForm>
+
+@code {
+    [Parameter]
+    public FieldModel? Model { get; set; }
+
+    private IList<FieldOptionsModel> options = new List<FieldOptionsModel>();
+
+    private bool _hasOptions = false;
+
+    private FieldRequestView _viewModel = new ();
+    bool isEdit => Model is not null;
+    
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _viewModel = Model is null ? _viewModel : Mapper.Map<FieldRequestView>(Model);
+    }
+
+    private async Task AddField()
+    {
+        if (Model is not null)
+        {
+            Snackbar.Add("Something went wrong, there is an existing Model", Severity.Error);
+            return;
+        }
+
+        Model = await Service.Add(_viewModel);
+        StateHasChanged();
+        Snackbar.Add("Field added!", Severity.Success);
+        Navigation.NavigateTo("/fields");
+    }
+
+    private async Task EditField()
+    {
+        if (Model is null)
+        {
+            Snackbar.Add("Something went wrong, Model is null", Severity.Error);
+            return;
+        }
+
+        Model.Name = _viewModel.Name;
+        Model.IsRequired = _viewModel.IsRequired;
+        Model.Placeholder = _viewModel.Placeholder;
+
+        await Service.Update(Model.Id, _viewModel);
+        StateHasChanged();
+        Snackbar.Add("Field edited!", Severity.Success);
+        Navigation.NavigateTo("/fields");
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/fields");
+    }
+
+    private async Task OnSubmit()
+    {
+        if (isEdit)
+        {
+            await EditField();
+        }
+        else
+        {
+            await AddField();
+        }
+        
+        foreach (var option in options)
+        {
+            option.FieldId = Model.Id;
+            await OptionsService.Add(option);
+        }
+
+        await OnValidSubmit.InvokeAsync();
+        _viewModel = new FieldRequestView();
+    }
+
+    private void CheckOptions(FieldTypeEnum option)
+    {
+        _viewModel.FieldType = option;
+        if (_viewModel.FieldType == FieldTypeEnum.Dropdown || _viewModel.FieldType == FieldTypeEnum.Radio)
+        {
+            _hasOptions = true;
+        }
+        else
+        {
+            _hasOptions = false;
+        }
+    }
+
+    private void AddOption()
+    {
+        var newOption = new FieldOptionsModel();
+        options.Add(newOption);
+    }
+
+    private void Delete(FieldOptionsModel context)
+    {
+        options.Remove(context);
+    }
+}

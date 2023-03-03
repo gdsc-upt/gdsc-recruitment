@@ -17,4 +17,12 @@
         <ProjectReference Include="..\GdscRecruitment.Common\GdscRecruitment.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <AdditionalFiles Include="Features\Fields\Components\AddEditFieldsForm.razor" />
+      <AdditionalFiles Include="Features\Fields\Components\FieldsTableActions.razor" />
+      <AdditionalFiles Include="Features\Fields\Pages\AddField.razor" />
+      <AdditionalFiles Include="Features\Fields\Pages\EditFields.razor" />
+      <AdditionalFiles Include="Features\Fields\Pages\Fields.razor" />
+    </ItemGroup>
+
 </Project>

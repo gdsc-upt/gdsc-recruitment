@@ -31,6 +31,11 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Features\Fields\Interviews\Pages\InterviewsTable.razor" />
+      <_ContentIncludedByDefault Remove="Features\Fields\Components\AddEditFieldsForm.razor" />
+      <_ContentIncludedByDefault Remove="Features\Fields\Components\FieldsTableActions.razor" />
+      <_ContentIncludedByDefault Remove="Features\Fields\Pages\AddField.razor" />
+      <_ContentIncludedByDefault Remove="Features\Fields\Pages\EditFields.razor" />
+      <_ContentIncludedByDefault Remove="Features\Fields\Pages\Fields.razor" />
     </ItemGroup>
 
 </Project>
