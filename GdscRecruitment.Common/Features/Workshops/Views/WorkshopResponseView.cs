@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using GdscRecruitment.Common.Features.Base;
 using MudBlazor;
 
 namespace GdscRecruitment.Common.Features.Workshops.Views;
 
-public class WorkshopResponseView
+public class WorkshopResponseView : ViewModel
 {
     [Label("Title")][Required] public string Title { get; set; }
     
