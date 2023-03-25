@@ -10,7 +10,7 @@ public class FieldResponseView : ViewModel
     [Label("Name")] [Required] public string Name { get; set; }
 
     [Label("IsRequired")] [Required]
-    [Range(typeof(bool), "true", "false")]
+    [Range(typeof(bool), "false", "true")]
     public bool IsRequired { get; set; }
 
     [Label("Placeholder")] public string? Placeholder { get; set; }
