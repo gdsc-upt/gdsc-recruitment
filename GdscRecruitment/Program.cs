@@ -50,17 +50,17 @@ services.AddScoped(typeof(ViewModelHelper<>));
 services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<User>>();
 services.AddTransient<UserManager<User>>();
 
-// services.AddAuthentication().AddGoogle(options =>
-// {
-//     options.ClientId = configuration["Google:ClientId"];
-//     options.ClientSecret = configuration["Google:ClientSecret"];
-//     options.ClaimActions.MapJsonKey(CustomClaimTypes.Picture, "picture", "url");
-//     options.ClaimActions.MapJsonKey(CustomClaimTypes.EmailVerified, "verified_email", "bool");
-//     options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "string");
-//     options.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name", "string");
-//     options.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name", "string");
-//     options.ClaimActions.Add(new CustomClaimAction("list json data", "json data"));
-// });
+services.AddAuthentication().AddGoogle(options =>
+{
+    options.ClientId = configuration["Google:ClientId"];
+    options.ClientSecret = configuration["Google:ClientSecret"];
+    options.ClaimActions.MapJsonKey(CustomClaimTypes.Picture, "picture", "url");
+    options.ClaimActions.MapJsonKey(CustomClaimTypes.EmailVerified, "verified_email", "bool");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name", "string");
+    options.ClaimActions.MapJsonKey(ClaimTypes.GivenName, "given_name", "string");
+    options.ClaimActions.MapJsonKey(ClaimTypes.Surname, "family_name", "string");
+    options.ClaimActions.Add(new CustomClaimAction("list json data", "json data"));
+});
 
 var app = builder.Build();
 

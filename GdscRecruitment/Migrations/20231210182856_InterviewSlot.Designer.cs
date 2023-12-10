@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GdscRecruitment.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231210141230_init recruitment-dev")]
-    partial class initrecruitmentdev
+    [Migration("20231210182856_InterviewSlot")]
+    partial class InterviewSlot
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,6 +102,37 @@ namespace GdscRecruitment.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Fields");
+                });
+
+            modelBuilder.Entity("GdscRecruitment.Common.Features.InterviewSlot.Models.InterviewSlotModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CandidateId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MeetingLink")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TeamId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterviewSlots");
                 });
 
             modelBuilder.Entity("GdscRecruitment.Common.Features.Responses.Models.ResponseModel", b =>

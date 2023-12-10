@@ -1,6 +1,7 @@
 ﻿using GdscRecruitment.Common.Features.Examples.Models;
 using GdscRecruitment.Common.Features.FieldOptions.Model;
 using GdscRecruitment.Common.Features.Fields.Models;
+using GdscRecruitment.Common.Features.InterviewSlot.Models;
 using GdscRecruitment.Common.Features.Responses.Models;
 using GdscRecruitment.Common.Features.Teams.Models;
 using GdscRecruitment.Common.Features.Users.Models;
@@ -25,4 +26,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<FieldOptionsModel> FieldOptions { get; set; } = null!;
     
     public DbSet<TeamModel> Teams { get; set; } = null!;
+
+    public DbSet<InterviewSlotModel> InterviewSlots { get; set; } = null!;
 }
