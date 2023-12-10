@@ -12,21 +12,14 @@ using Microsoft.Extensions.Options;
 
 namespace GdscRecruitment.Areas.Identity;
 
-public class RevalidatingIdentityAuthenticationStateProvider<TUser>
-    : RevalidatingServerAuthenticationStateProvider where TUser : class
+public class RevalidatingIdentityAuthenticationStateProvider<TUser>(
+    ILoggerFactory loggerFactory,
+    IServiceScopeFactory scopeFactory,
+    IOptions<IdentityOptions> optionsAccessor)
+    : RevalidatingServerAuthenticationStateProvider(loggerFactory)
+    where TUser : class
 {
-    private readonly IServiceScopeFactory _scopeFactory;
-    private readonly IdentityOptions _options;
-
-    public RevalidatingIdentityAuthenticationStateProvider(
-        ILoggerFactory loggerFactory,
-        IServiceScopeFactory scopeFactory,
-        IOptions<IdentityOptions> optionsAccessor)
-        : base(loggerFactory)
-    {
-        _scopeFactory = scopeFactory;
-        _options = optionsAccessor.Value;
-    }
+    private readonly IdentityOptions _options = optionsAccessor.Value;
 
     protected override TimeSpan RevalidationInterval => TimeSpan.FromMinutes(30);
 
@@ -34,7 +27,7 @@ public class RevalidatingIdentityAuthenticationStateProvider<TUser>
         AuthenticationState authenticationState, CancellationToken cancellationToken)
     {
         // Get the user manager from a new scope to ensure it fetches fresh data
-        var scope = _scopeFactory.CreateScope();
+        var scope = scopeFactory.CreateScope();
         try
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<TUser>>();

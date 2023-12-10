@@ -108,6 +108,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        
 
         _questions = await FieldsService.Get();
 
@@ -118,7 +119,7 @@
             _responses[question.Id] = new ResponseRequestView
             {
                 FieldId = question.Id,
-                UserId = User!.Id,
+                UserId = "user",//User!.Id,
             };
         }
     }

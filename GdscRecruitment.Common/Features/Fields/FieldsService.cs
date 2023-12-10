@@ -38,20 +38,20 @@ public class FieldsService
         return field;
     }
 
-    [Authorize(Roles = Roles.Admin)]
+    // [Authorize(Roles = Roles.Admin)]
     public async Task<FieldModel> Add(FieldRequestView fieldRequest)
     {
         var newEntity = _mapper.Map<FieldModel>(fieldRequest);
         return await _repository.AddAsync(newEntity);
     }
 
-    [Authorize(Roles = Roles.Admin)]
+    // [Authorize(Roles = Roles.Admin)]
     public async Task<FieldModel?> Delete(string id)
     {
         return await _repository.DeleteAsync(id);
     }
 
-    [Authorize(Roles = Roles.Admin)]
+    // [Authorize(Roles = Roles.Admin)]
     public async Task<FieldResponseView> Update(string id, FieldRequestView fieldRequestView)
     {
         return _mapper.Map<FieldResponseView>(await _repository.UpdateAsync(id, fieldRequestView));
