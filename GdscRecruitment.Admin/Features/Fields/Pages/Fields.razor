@@ -9,9 +9,9 @@
 
 <PageTitle>Fields</PageTitle>
 
-@* <AuthorizeView Roles="@Roles.Admin"> *@
-@*     <AddEditFieldsForm OnValidSubmit="FetchData"></AddEditFieldsForm> *@
-@* </AuthorizeView> *@
+<AuthorizeView Roles="@Roles.Admin">
+    <AddEditFieldsForm OnValidSubmit="FetchData"></AddEditFieldsForm>
+</AuthorizeView>
 
 
 @TableActions

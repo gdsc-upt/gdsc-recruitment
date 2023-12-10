@@ -101,6 +101,37 @@ namespace GdscRecruitment.Migrations
                     b.ToTable("Fields");
                 });
 
+            modelBuilder.Entity("GdscRecruitment.Common.Features.InterviewSlot.Models.InterviewSlotModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CandidateId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("MeetingLink")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("TeamId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("Updated")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("InterviewSlots");
+                });
+
             modelBuilder.Entity("GdscRecruitment.Common.Features.Responses.Models.ResponseModel", b =>
                 {
                     b.Property<string>("Id")

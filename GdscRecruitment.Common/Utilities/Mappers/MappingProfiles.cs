@@ -2,6 +2,8 @@ using AutoMapper;
 using GdscRecruitment.Common.Features.Examples.Models;
 using GdscRecruitment.Common.Features.Fields.Models;
 using GdscRecruitment.Common.Features.Fields.Views;
+using GdscRecruitment.Common.Features.InterviewSlot.Models;
+using GdscRecruitment.Common.Features.InterviewSlot.Views;
 using GdscRecruitment.Common.Features.Responses.Models;
 using GdscRecruitment.Common.Features.Responses.Views;
 using GdscRecruitment.Common.Features.Teams.Models;
@@ -20,5 +22,7 @@ public class MappingProfiles : Profile
         CreateMap<TeamModel, TeamResponse>().ReverseMap();
         CreateMap<TeamModel, TeamRequest>().ReverseMap();
         CreateMap(typeof(ExampleModel), typeof(ExampleViewModel)).ReverseMap();
+        CreateMap<InterviewSlotModel, InterviewSlotResponseView>().ReverseMap();
+        CreateMap<InterviewSlotModel, InterviewSlotRequestView>().ReverseMap();
     }
 }
