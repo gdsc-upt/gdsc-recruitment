@@ -6,6 +6,8 @@ using GdscRecruitment.Common.Features.Responses.Models;
 using GdscRecruitment.Common.Features.Responses.Views;
 using GdscRecruitment.Common.Features.Teams.Models;
 using GdscRecruitment.Common.Features.Teams.Views;
+using GdscRecruitment.Common.Features.Workshops.Models;
+using GdscRecruitment.Common.Features.Workshops.Views;
 
 namespace GdscRecruitment.Common.Utilities.Mappers;
 
@@ -20,5 +22,6 @@ public class MappingProfiles : Profile
         CreateMap<TeamModel, TeamResponse>().ReverseMap();
         CreateMap<TeamModel, TeamRequest>().ReverseMap();
         CreateMap(typeof(ExampleModel), typeof(ExampleViewModel)).ReverseMap();
+        CreateMap<WorkshopModel, WorkshopRequest>().ReverseMap();
     }
 }

@@ -10,8 +10,8 @@
     "Default": "Host=;Port=;Database=;Username=;Password="
   },
   "Google": {
-    "ClientId": "",
-    "ClientSecret": "",
+    "ClientId": " ",
+    "ClientSecret": " ",
     "CallbackPath": "/signin-google"
   }
 }

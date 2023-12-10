@@ -4,6 +4,7 @@ using GdscRecruitment.Common.Features.Fields.Models;
 using GdscRecruitment.Common.Features.Responses.Models;
 using GdscRecruitment.Common.Features.Teams.Models;
 using GdscRecruitment.Common.Features.Users.Models;
+using GdscRecruitment.Common.Features.Workshops.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -25,4 +26,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<FieldOptionsModel> FieldOptions { get; set; } = null!;
     
     public DbSet<TeamModel> Teams { get; set; } = null!;
+
+    public DbSet<WorkshopModel> WorkshopModels { get; set; } = null!;
 }
