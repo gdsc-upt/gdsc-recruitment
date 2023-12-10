@@ -8,9 +8,19 @@
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == '' Or '$(Configuration)' == 'Debug'">
+        <EnvironmentName>Development</EnvironmentName>
+    </PropertyGroup>
+    
+    <PropertyGroup Condition=" '$(Configuration)' != '' AND '$(Configuration)' != 'Debug' ">
+        <EnvironmentName>Production</EnvironmentName>
+    </PropertyGroup>
+
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="12.0.1" />
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+        <PackageReference Include="Keycloak.AuthServices.Authentication" Version="1.6.0" />
+        <PackageReference Include="Keycloak.AuthServices.Authorization" Version="1.6.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
